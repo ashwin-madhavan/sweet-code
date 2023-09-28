@@ -30,10 +30,15 @@ fun CategoryListScreen(navigate: (String) -> Unit) {
         StudyItem("Graph", 25, 20),
     )
 
+    val titlesList = listOf(
+        Pair("Title 1", { /* onClick handler for Title 1 */ }),
+        Pair("Title 2", { /* onClick handler for Title 2 */ }),
+        Pair("Title 3", { /* onClick handler for Title 3 */ })
+    )
 
     Scaffold(
         topBar = {
-
+            CodeCadenceTopAppBar(titles = titlesList)
         },
         content = {
             categoryListContent(
