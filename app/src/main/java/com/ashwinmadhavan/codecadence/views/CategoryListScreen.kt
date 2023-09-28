@@ -21,13 +21,13 @@ fun CategoryListScreen(navigate: (String) -> Unit) {
     // the only reason you do it in two lines is so that it doesn't look cluttered like this: var tasks by remember { mutableStateOf(taskListViewModel.readLists().toList()) }
 
     val studyItems = listOf(
-        StudyItem("Array", 10, 5),
+        StudyItem("Array", 10, 9),
         StudyItem("Linked List", 15, 8),
-        StudyItem("Stack", 8, 3),
-        StudyItem("Queue", 12, 6),
-        StudyItem("Binary Tree", 20, 10),
-        StudyItem("Hashing", 18, 9),
-        StudyItem("Graph", 25, 12),
+        StudyItem("Stack", 8, 2),
+        StudyItem("Queue", 12, 1),
+        StudyItem("Binary Tree", 20, 15),
+        StudyItem("Hashing", 18, 12),
+        StudyItem("Graph", 25, 20),
     )
 
 
@@ -51,13 +51,17 @@ fun CategoryListScreen(navigate: (String) -> Unit) {
 
 
 @Composable
-fun categoryListContent(modifier: Modifier, categories: List<StudyItem>, onClick: (String) -> Unit) {
+fun categoryListContent(
+    modifier: Modifier,
+    categories: List<StudyItem>,
+    onClick: (String) -> Unit
+) {
     LazyColumn(
         modifier = modifier,
         content = {
             items(categories) {
                 ListItemView(
-                    value = it.name,
+                    studyItem = it,
                     onClick = onClick
                 )
             }

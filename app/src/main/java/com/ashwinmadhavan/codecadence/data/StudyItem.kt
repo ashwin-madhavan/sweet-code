@@ -9,4 +9,3 @@ data class StudyItem(
     val goalHours: Int,
     val completedHours: Int,
 ) : Parcelable
-
