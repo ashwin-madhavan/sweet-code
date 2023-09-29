@@ -1,54 +1,36 @@
 package com.github.af2905.jetpack_compose_navigation.screen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
+import com.ashwinmadhavan.codecadence.data.CategoryItem
+import com.ashwinmadhavan.codecadence.screen.CategoryItemView
 
 @Composable
 fun HomeScreen(onItemClick: () -> Unit) {
-    DetailItemList(onItemClick = onItemClick)
+    categoryItemList(onItemClick = onItemClick)
 }
 
 @Composable
-fun DetailItemList(onItemClick: () -> Unit) {
-    val list = mutableListOf<CardItem>()
-
-    for (i in 0..10) {
-        list.add(CardItem(id = i))
-    }
+fun categoryItemList(onItemClick: () -> Unit) {
+    val list = mutableListOf(
+        CategoryItem("Array", 10, 9),
+        CategoryItem("Linked List", 15, 8),
+        CategoryItem("Stack", 8, 2),
+        CategoryItem("Queue", 12, 1),
+        CategoryItem("Binary Tree", 20, 15),
+        CategoryItem("Hashing", 18, 12),
+        CategoryItem("Graph", 25, 20)
+    )
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(all = 16.dp)
     ) {
         items(list) { item ->
-            DetailItem(item = item, onItemClick = onItemClick)
+            CategoryItemView(studyItem = item, onClick = onItemClick)
         }
     }
 }
-
-@Composable
-fun DetailItem(item: CardItem, onItemClick: () -> Unit) {
-    Card(
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onItemClick() }
-    ) {
-        Text(
-            text = "Item ${item.id}",
-            textAlign = TextAlign.Start,
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-}
-
-data class CardItem(val id: Int)

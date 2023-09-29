@@ -1,4 +1,4 @@
-package com.ashwinmadhavan.codecadence.views
+package com.ashwinmadhavan.codecadence.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

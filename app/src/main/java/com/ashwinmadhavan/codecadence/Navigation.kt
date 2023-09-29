@@ -29,7 +29,7 @@ import com.ashwinmadhavan.codecadence.Routes.DETAIL_SCREEN
 import com.ashwinmadhavan.codecadence.Routes.HOME_SCREEN
 import com.ashwinmadhavan.codecadence.Routes.LOGS_SCREEN
 import com.ashwinmadhavan.codecadence.ui.theme.PurpleGrey40
-import com.ashwinmadhavan.codecadence.views.LogsScreen
+import com.ashwinmadhavan.codecadence.screen.LogsScreen
 import com.github.af2905.jetpack_compose_navigation.screen.DetailScreen
 import com.github.af2905.jetpack_compose_navigation.screen.HomeScreen
 
