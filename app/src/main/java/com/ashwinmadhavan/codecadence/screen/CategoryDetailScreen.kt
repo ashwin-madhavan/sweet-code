@@ -10,7 +10,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun DetailScreen() {
+fun CategoryDetailScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "Detail Screen",

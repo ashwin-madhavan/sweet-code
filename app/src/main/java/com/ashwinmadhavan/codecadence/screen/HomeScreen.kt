@@ -27,7 +27,7 @@ fun categoryItemList(onItemClick: () -> Unit) {
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(all = 16.dp)
+        contentPadding = PaddingValues(all = 3.dp)
     ) {
         items(list) { item ->
             CategoryItemView(studyItem = item, onClick = onItemClick)

@@ -45,7 +45,7 @@ fun CategoryItemView(studyItem: CategoryItem, onClick: () -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(6.dp)
+            .padding(2.dp)
             .clickable { onClick() },
         shape = shape,
         color = Color.LightGray.copy(alpha = 0.3f),

@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -30,7 +31,7 @@ import com.ashwinmadhavan.codecadence.Routes.HOME_SCREEN
 import com.ashwinmadhavan.codecadence.Routes.LOGS_SCREEN
 import com.ashwinmadhavan.codecadence.ui.theme.PurpleGrey40
 import com.ashwinmadhavan.codecadence.screen.LogsScreen
-import com.github.af2905.jetpack_compose_navigation.screen.DetailScreen
+import com.github.af2905.jetpack_compose_navigation.screen.CategoryDetailScreen
 import com.github.af2905.jetpack_compose_navigation.screen.HomeScreen
 
 data class Item(val route: String, val icon: ImageVector)
@@ -39,7 +40,7 @@ data class Item(val route: String, val icon: ImageVector)
 fun BottomNavigationItems(navController: NavController) {
     val itemList = listOf(
         Item(route = HOME_SCREEN, icon = Icons.Filled.Home),
-        Item(route = LOGS_SCREEN, icon = Icons.Filled.Favorite)
+        Item(route = LOGS_SCREEN, icon = Icons.Filled.List)
     )
 
     BottomNavigation {
@@ -100,7 +101,7 @@ fun SetupNavigationHost(
             HomeScreen(onItemClick = { navController.navigate(DETAIL_SCREEN) })
         }
         composable(route = DETAIL_SCREEN) {
-            DetailScreen()
+            CategoryDetailScreen()
         }
         composable(LOGS_SCREEN) {
             LogsScreen()
