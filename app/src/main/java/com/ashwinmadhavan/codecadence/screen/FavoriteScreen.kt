@@ -1,4 +1,4 @@
-package com.ashwinmadhavan.codecadence.views
+package com.github.af2905.jetpack_compose_navigation.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,10 +10,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun LogsScreen() {
+fun FavoriteScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = "Logs Screen",
+            text = "Favorite Screen",
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier

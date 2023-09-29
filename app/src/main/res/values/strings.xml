@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">CodeCadence</string>
+    <string name="screen_home_title">Home Screen</string>
+    <string name="screen_log_title">Logs Screen</string>
+    <string name="screen_detail_title">Detail Screen</string>
 </resources>
