@@ -8,6 +8,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.ashwinmadhavan.codecadence.R
 import com.ashwinmadhavan.codecadence.data.StudyItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,6 +52,13 @@ fun CategoryListScreen(navigate: (String) -> Unit) {
             )
         },
         floatingActionButton = {
+            ListMakerFloatingActionButton(
+                title = "title",
+                inputHint = "hint",
+                onFabClick = {
+
+                }
+            )
         }
     )
 }
@@ -65,7 +74,7 @@ fun categoryListContent(
         modifier = modifier,
         content = {
             items(categories) {
-                ListItemView(
+                StudyItemView(
                     studyItem = it,
                     onClick = onClick
                 )

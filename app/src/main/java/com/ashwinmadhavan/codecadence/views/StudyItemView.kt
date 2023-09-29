@@ -14,12 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ashwinmadhavan.codecadence.data.StudyItem
 
 @Composable
-fun ListItemView(studyItem: StudyItem, onClick: (String) -> Unit) {
+fun StudyItemView(studyItem: StudyItem, onClick: (String) -> Unit) {
     val shape = RoundedCornerShape(8.dp)
     val normalizedFraction =
         (studyItem.completedHours.toFloat() / studyItem.goalHours.toFloat()).coerceIn(0f, 1f)

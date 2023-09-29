@@ -7,15 +7,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ashwinmadhavan.codecadence.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,3 +65,52 @@ fun CodeCadenceTopAppBar(titles: List<Pair<String, () -> Unit>>) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ListMakerFloatingActionButton(
+    title: String,
+    inputHint: String,
+    onFabClick: (String) -> Unit
+) {
+    var showDialog by remember { mutableStateOf(false) }
+    var taskName by remember { mutableStateOf("") }
+
+    FloatingActionButton(
+        onClick = {
+            showDialog = true
+        },
+        content = {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Create Label"
+            )
+        }
+    )
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = title) },
+            text = {
+                OutlinedTextField(
+                    value = taskName,
+                    onValueChange = { taskName = it },
+                    label = { Text(text = inputHint) },
+                    singleLine = true
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDialog = false
+                        onFabClick(taskName)
+                        taskName = ""
+                    },
+                    content = {
+                        Text(text = "Create Label")
+                    }
+                )
+            },
+        )
+    }
+}
