@@ -2,6 +2,7 @@ package com.ashwinmadhavan.codecadence.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
@@ -15,10 +16,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ashwinmadhavan.codecadence.data.User
 
@@ -27,27 +28,36 @@ import com.ashwinmadhavan.codecadence.data.User
 @Composable
 fun LogsScreen() {
     val viewModel: TestViewModel = viewModel()
-    val user = User(1, "John", "doe")
-
-    // Insert a user into the database
-
 
     Scaffold(
         content = {
             Box(modifier = Modifier.fillMaxSize()) {
-                Button(onClick = {
-                    viewModel.insertUser(user)
-                }) {
-                    Text("Insert User")
+                Column {
+                    Button(onClick = {
+                        viewModel.insertUser("John", "Doe")
+                    }) {
+                        Text("Insert User")
+                    }
+
+                    Button(onClick = { viewModel.deleteAllUsers() }) {
+                        Text("Delete All Users")
+                    }
+
+                    // Observe the allUsers LiveData
+                    val users: List<User> by viewModel.allUsers.observeAsState(emptyList())
+
+                    if (users != null) {
+                        if (users.isNotEmpty()) {
+                            users.forEach { user ->
+                                Text(text = "User ID: ${user.uid}, Name: ${user.firstName} ${user.lastName}")
+                            }
+                        } else {
+                            Text(text = "No users available.")
+                        }
+                    } else {
+                        Text(text= "Loading...")
+                    }
                 }
-                Text(
-                    text = "Logs Screen",
-                    fontSize = 24.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .wrapContentHeight()
-                )
             }
         },
         floatingActionButton = {

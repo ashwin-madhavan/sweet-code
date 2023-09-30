@@ -39,6 +39,9 @@ interface UserDao {
 
     @Delete
     fun delete(user: User)
+
+    @Query("DELETE FROM user")
+    suspend fun deleteAllUsers()
 }
 
 @Database(entities = [User::class], version = 2)
