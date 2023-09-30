@@ -18,14 +18,28 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ashwinmadhavan.codecadence.data.User
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogsScreen() {
+    val viewModel: TestViewModel = viewModel()
+    val user = User(1, "John", "doe")
+
+    // Insert a user into the database
+
+
     Scaffold(
         content = {
             Box(modifier = Modifier.fillMaxSize()) {
+                Button(onClick = {
+                    viewModel.insertUser(user)
+                }) {
+                    Text("Insert User")
+                }
                 Text(
                     text = "Logs Screen",
                     fontSize = 24.sp,
