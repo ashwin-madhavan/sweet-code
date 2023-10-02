@@ -1,4 +1,4 @@
-package com.github.af2905.jetpack_compose_navigation.screen
+package com.ashwinmadhavan.codecadence.screen.HomeScreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

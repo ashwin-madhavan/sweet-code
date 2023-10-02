@@ -1,4 +1,4 @@
-package com.ashwinmadhavan.codecadence.screen
+package com.ashwinmadhavan.codecadence.screen.LogsScreen
 
 import android.util.Log
 import androidx.lifecycle.LiveData

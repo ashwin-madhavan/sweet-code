@@ -1,4 +1,4 @@
-package com.ashwinmadhavan.codecadence.screen
+package com.ashwinmadhavan.codecadence.screen.HomeScreen
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

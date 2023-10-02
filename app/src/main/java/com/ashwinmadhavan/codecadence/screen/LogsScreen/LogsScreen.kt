@@ -1,4 +1,4 @@
-package com.ashwinmadhavan.codecadence.screen
+package com.ashwinmadhavan.codecadence.screen.LogsScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -56,10 +56,8 @@ fun LogsScreen() {
                 }
                 //UserDatabaseBox(viewModel)
                 //LogTableBox(viewModel)
-                if (logs != null) {
-                    if (logs.isNotEmpty()) {
-                        TableScreen(logs)
-                    }
+                if (logs != null && logs.isNotEmpty()) {
+                    TableScreen(logs)
                 } else {
                     Text(text = "Loading...")
                 }
