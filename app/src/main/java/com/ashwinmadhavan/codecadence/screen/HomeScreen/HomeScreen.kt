@@ -1,41 +1,114 @@
 package com.ashwinmadhavan.codecadence.screen.HomeScreen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ashwinmadhavan.codecadence.Constants
 
 @Composable
 fun HomeScreen(onItemClick: () -> Unit) {
     val viewModel: HomeViewModel = viewModel()
-
-    Column {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        // TODO: Not sure why the line below is needed to populate the progress bars
         viewModel.totalHoursMap.forEach { (category, totalHoursLiveData) ->
             val totalHours: Double? by totalHoursLiveData.observeAsState(null)
 
             when {
                 totalHours != null -> {
-                    Text(text = "Total $category Hours: $totalHours")
+                    //Text(text = "Total $category Hours: $totalHours")
                 }
 
                 else -> {
-                    Text(text = "Not Started")
+                    // Text(text = "Not Started")
                 }
             }
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Overview", style = TextStyle(
+                fontSize = 24.sp,  // Adjust the font size as needed
+                fontWeight = FontWeight.Bold,
+                color = Color.Black  // Adjust the color as needed
+            )
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        CustomDoubleDisplay(double1 = 143.02, double2 = 200.00)
+        Text(text = "total hrs")
+        Spacer(modifier = Modifier.height(16.dp))
         categoryItemList(viewModel = viewModel, onItemClick = onItemClick)
     }
 }
 
+@Composable
+fun CustomDoubleDisplay(double1: Double, double2: Double) {
+    Row(
+        modifier = Modifier,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        // Display the first double
+        Text(
+            text = String.format("%.2f", double1),
+            style = MaterialTheme.typography.h6.copy(fontSize = 24.sp)
+        )
+
+        // Display the separator
+        Text(
+            text = "/",
+            style = MaterialTheme.typography.h6.copy(fontSize = 24.sp)
+        )
+
+        // Display the second double (smaller font and bold)
+        Box(
+            modifier = Modifier
+                .align(Alignment.Bottom)
+        ) {
+            Text(
+                text = String.format("%.2f", double2),
+                style = MaterialTheme.typography.h6.copy(
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            )
+        }
+    }
+}
+
+@Composable
+fun viewTotalHrs(viewModel: HomeViewModel) {
+    viewModel.totalHoursMap.forEach { (category, totalHoursLiveData) ->
+        val totalHours: Double? by totalHoursLiveData.observeAsState(null)
+
+        when {
+            totalHours != null -> {
+                //Text(text = "Total $category Hours: $totalHours")
+            }
+
+            else -> {
+               // Text(text = "Not Started")
+            }
+        }
+    }
+}
 
 @Composable
 fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
@@ -44,13 +117,16 @@ fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
         val totalHoursForCategory = viewModel.totalHoursMap[category]?.value ?: 0.0
         CategoryItem(category, goalHoursForCategory, totalHoursForCategory)
     }
+
+    // Calculate the maximum goal hours
+    val maxGoalHours = list.maxByOrNull { it.goalHours }?.goalHours ?: 0.0
     Column {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(all = 3.dp)
+            contentPadding = PaddingValues(all = 5.dp)
         ) {
             items(list) { item ->
-                CategoryItemView(20.0, categoryItem = item, onClick = onItemClick)
+                CategoryItemView(maxGoalHours, categoryItem = item, onClick = onItemClick)
             }
         }
     }

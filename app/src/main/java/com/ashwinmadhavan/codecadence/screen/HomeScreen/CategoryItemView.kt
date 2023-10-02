@@ -4,9 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,12 +30,12 @@ fun CategoryItemView(maxGoalHrs: Double, categoryItem: CategoryItem, onClick: ()
             .padding(2.dp)
             .clickable { onClick() },
         shape = shape,
-        color = Color.LightGray.copy(alpha = 0.3f),
+        color = Color.LightGray.copy(alpha = 0.7f),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Study item name
@@ -39,10 +43,10 @@ fun CategoryItemView(maxGoalHrs: Double, categoryItem: CategoryItem, onClick: ()
                 text = categoryItem.name,
                 modifier = Modifier
                     .weight(0.25f)
-                    .padding(end = 16.dp)
+                    .padding(end = 4.dp)
             )
 
-            // Progress bar
+
             val progress = (categoryItem.completedHours / categoryItem.goalHours).toFloat()
             val barLen = (categoryItem.goalHours / maxGoalHrs).toFloat()
             Box(
@@ -53,10 +57,12 @@ fun CategoryItemView(maxGoalHrs: Double, categoryItem: CategoryItem, onClick: ()
                 LinearProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth(barLen)
+                        .height(16.dp)  // Adjust the height to make the bar thicker
                         .background(Color.Cyan),
                     progress = progress,
                 )
             }
+
         }
     }
 }

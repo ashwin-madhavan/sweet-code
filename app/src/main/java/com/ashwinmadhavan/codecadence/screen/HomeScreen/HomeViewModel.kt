@@ -16,7 +16,7 @@ class HomeViewModel : ViewModel() {
         "Work" to 10.0,
         "Array" to 5.0,
         "Stack" to 20.0,
-        "Other" to 10.0
+        "Binary Tree" to 30.0
     )
     private val _goalHoursMap = mutableMapOf<String, MutableLiveData<Double>>()
     init {
