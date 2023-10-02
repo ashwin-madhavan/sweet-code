@@ -6,6 +6,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CategoryItem(
     val name: String,
-    val goalHours: Int,
-    val completedHours: Int,
+    val goalHours: Double,
+    val completedHours: Double,
 ) : Parcelable

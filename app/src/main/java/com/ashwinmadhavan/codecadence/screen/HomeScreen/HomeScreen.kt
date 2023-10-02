@@ -42,15 +42,13 @@ fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
     val list = Constants.CATEGORIES.map { category ->
         val goalHoursForCategory = viewModel.getGoalHours(category).value ?: 0.0
         val totalHoursForCategory = viewModel.totalHoursMap[category]?.value ?: 0.0
-        CategoryItem(category, goalHoursForCategory.toInt(), totalHoursForCategory.toInt())
+        CategoryItem(category, goalHoursForCategory, totalHoursForCategory)
     }
     Column {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(all = 3.dp)
         ) {
-
-
             items(list) { item ->
                 CategoryItemView(studyItem = item, onClick = onItemClick)
             }
