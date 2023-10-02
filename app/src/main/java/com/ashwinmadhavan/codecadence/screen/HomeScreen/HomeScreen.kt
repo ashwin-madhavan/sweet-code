@@ -15,17 +15,21 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun HomeScreen(onItemClick: () -> Unit) {
     val viewModel: HomeViewModel = viewModel()
-    val workHrs: Double? by viewModel.totalHours.observeAsState(null)
 
     Column {
-        when {
-            workHrs != null -> {
-                Text(text = "Total Work Hours: $workHrs")
-            }
-            else -> {
-                Text(text = "Loading...")
+        viewModel.totalHoursMap.forEach { (category, totalHoursLiveData) ->
+            val totalHours: Double? by totalHoursLiveData.observeAsState(null)
+
+            when {
+                totalHours != null -> {
+                    Text(text = "Total $category Hours: $totalHours")
+                }
+                else -> {
+                    Text(text = "Not Started")
+                }
             }
         }
+
         categoryItemList(onItemClick = onItemClick)
     }
 }

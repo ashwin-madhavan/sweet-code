@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ashwinmadhavan.codecadence.Constants
 import com.ashwinmadhavan.codecadence.data.LogEntity
 import com.ashwinmadhavan.codecadence.data.User
 import java.util.Date
@@ -282,7 +283,7 @@ fun LogMakerFloatingActionButton(
     )
 
     if (showDialog) {
-        val categories = listOf("Work", "Personal", "Study", "Other")
+        val categories = Constants.CATEGORIES
 
         var expanded by remember { mutableStateOf(false) }
         var selectedCategory by remember { mutableStateOf(categories[0]) }
