@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
-import com.ashwinmadhavan.codecadence.data.CategoryItem
+import com.ashwinmadhavan.codecadence.screen.CategoryItem
 import com.ashwinmadhavan.codecadence.screen.CategoryItemView
 
 @Composable

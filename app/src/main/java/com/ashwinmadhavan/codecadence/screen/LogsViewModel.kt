@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
 
-class TestViewModel : ViewModel() {
+class LogsViewModel : ViewModel() {
 
     private val userDao = MyApplication.database.userDao()
     private val _allUsers = MutableLiveData<List<User>>() // Private mutable LiveData

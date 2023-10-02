@@ -45,7 +45,7 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogsScreen() {
-    val viewModel: TestViewModel = viewModel()
+    val viewModel: LogsViewModel = viewModel()
     val logs: List<LogEntity> by viewModel.allLogs.observeAsState(emptyList())
 
     Scaffold(
@@ -184,7 +184,7 @@ fun LogList(logs: List<LogEntity>) {
 }
 
 @Composable
-fun LogTableBox(viewModel: TestViewModel) {
+fun LogTableBox(viewModel: LogsViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -225,7 +225,7 @@ fun LogTableBox(viewModel: TestViewModel) {
 }
 
 @Composable
-fun UserDatabaseBox(viewModel: TestViewModel) {
+fun UserDatabaseBox(viewModel: LogsViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -266,7 +266,7 @@ fun UserDatabaseBox(viewModel: TestViewModel) {
 @Composable
 fun LogMakerFloatingActionButton(
     title: String,
-    viewModel: TestViewModel
+    viewModel: LogsViewModel
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var taskName by remember { mutableStateOf("") }

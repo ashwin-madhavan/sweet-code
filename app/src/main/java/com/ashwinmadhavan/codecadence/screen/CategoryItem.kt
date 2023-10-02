@@ -1,4 +1,4 @@
-package com.ashwinmadhavan.codecadence.data
+package com.ashwinmadhavan.codecadence.screen
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
