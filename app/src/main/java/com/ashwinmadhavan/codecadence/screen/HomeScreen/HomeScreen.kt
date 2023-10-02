@@ -50,7 +50,7 @@ fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
             contentPadding = PaddingValues(all = 3.dp)
         ) {
             items(list) { item ->
-                CategoryItemView(studyItem = item, onClick = onItemClick)
+                CategoryItemView(20.0, categoryItem = item, onClick = onItemClick)
             }
         }
     }

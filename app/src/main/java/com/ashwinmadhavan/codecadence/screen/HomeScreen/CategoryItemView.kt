@@ -1,13 +1,13 @@
 package com.ashwinmadhavan.codecadence.screen.HomeScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,10 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CategoryItemView(studyItem: CategoryItem, onClick: () -> Unit) {
+fun CategoryItemView(maxGoalHrs: Double, categoryItem: CategoryItem, onClick: () -> Unit) {
     val shape = RoundedCornerShape(8.dp)
-    val normalizedFraction =
-        (studyItem.completedHours.toFloat() / studyItem.goalHours.toFloat()).coerceIn(0f, 1f)
 
     Surface(
         modifier = Modifier
@@ -30,27 +28,36 @@ fun CategoryItemView(studyItem: CategoryItem, onClick: () -> Unit) {
         shape = shape,
         color = Color.LightGray.copy(alpha = 0.3f),
     ) {
-
         Row(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Study item name
             Text(
-                text = studyItem.name,
+                text = categoryItem.name,
                 modifier = Modifier
-                    .padding(4.dp)
-                    .weight(1f / 4)
+                    .weight(0.25f)
+                    .padding(end = 16.dp)
             )
 
-            LinearProgressIndicator(
+            // Progress bar
+            val progress = (categoryItem.completedHours / categoryItem.goalHours).toFloat()
+            val barLen = (categoryItem.goalHours / maxGoalHrs).toFloat()
+            Box(
                 modifier = Modifier
+                    .weight(0.75f)
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-                    .weight(3f / 4),
-                progress = normalizedFraction,
-                color = MaterialTheme.colorScheme.primary
-            )
+            ) {
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth(barLen)
+                        .background(Color.Cyan),
+                    progress = progress,
+                )
+            }
         }
-
     }
 }
+

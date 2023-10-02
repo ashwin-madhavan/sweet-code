@@ -14,8 +14,8 @@ class HomeViewModel : ViewModel() {
 
     private val defaultGoalHours = mapOf(
         "Work" to 10.0,
-        "Personal" to 10.0,
-        "Study" to 10.0,
+        "Array" to 5.0,
+        "Stack" to 20.0,
         "Other" to 10.0
     )
     private val _goalHoursMap = mutableMapOf<String, MutableLiveData<Double>>()
