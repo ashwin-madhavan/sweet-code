@@ -16,23 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-
-//@Composable
-//fun CategoryItemViewTest(studyItem: CategoryItem, onClick: () -> Unit) {
-//    Card(
-//        shape = RoundedCornerShape(8.dp),
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .clickable { onItemClick() }
-//    ) {
-//        androidx.compose.material.Text(
-//            text = "Item ${item.id}",
-//            textAlign = TextAlign.Start,
-//            modifier = Modifier.padding(16.dp)
-//        )
-//    }
-//}
-
 @Composable
 fun CategoryItemView(studyItem: CategoryItem, onClick: () -> Unit) {
     val shape = RoundedCornerShape(8.dp)

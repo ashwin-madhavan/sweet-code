@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ashwinmadhavan.codecadence.Constants
 
 @Composable
 fun HomeScreen(onItemClick: () -> Unit) {
@@ -24,33 +25,32 @@ fun HomeScreen(onItemClick: () -> Unit) {
                 totalHours != null -> {
                     Text(text = "Total $category Hours: $totalHours")
                 }
+
                 else -> {
                     Text(text = "Not Started")
                 }
             }
         }
 
-        categoryItemList(onItemClick = onItemClick)
+        categoryItemList(viewModel = viewModel, onItemClick = onItemClick)
     }
 }
 
 
 @Composable
-fun categoryItemList(onItemClick: () -> Unit) {
-    val list = mutableListOf(
-        CategoryItem("Array", 10, 9),
-        CategoryItem("Linked List", 15, 8),
-        CategoryItem("Stack", 8, 2),
-        CategoryItem("Queue", 12, 1),
-        CategoryItem("Binary Tree", 20, 15),
-        CategoryItem("Hashing", 18, 12),
-        CategoryItem("Graph", 25, 20)
-    )
+fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
+    val list = Constants.CATEGORIES.map { category ->
+        val goalHoursForCategory = viewModel.getGoalHours(category).value ?: 0.0
+        val totalHoursForCategory = viewModel.totalHoursMap[category]?.value ?: 0.0
+        CategoryItem(category, goalHoursForCategory.toInt(), totalHoursForCategory.toInt())
+    }
     Column {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(all = 3.dp)
         ) {
+
+
             items(list) { item ->
                 CategoryItemView(studyItem = item, onClick = onItemClick)
             }
