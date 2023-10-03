@@ -1,13 +1,10 @@
 package com.ashwinmadhavan.codecadence.data
 
 import androidx.lifecycle.LiveData
-import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
-import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
@@ -24,8 +21,6 @@ data class LogEntity(
     val id: Int = 0,  // Autoincremented ID
     val category: String,
     val date: Date,
-    val startTime: String,
-    val endTime: String,
     val totalHours: Double,
     val notes: String
 )
@@ -72,7 +67,7 @@ interface LogDao {
 }
 
 
-@Database(entities = [LogEntity::class], version = 1)
+@Database(entities = [LogEntity::class], version = 2)
 @TypeConverters(TimeConverter::class)
 abstract class LogDatabase : RoomDatabase() {
     abstract fun logDao(): LogDao

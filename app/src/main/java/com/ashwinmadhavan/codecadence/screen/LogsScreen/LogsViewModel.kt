@@ -55,16 +55,12 @@ class LogsViewModel : ViewModel() {
     fun insertLog(
         category: String,
         date: Date,
-        startTime: String,
-        endTime: String,
         totalHours: Double,
         notes: String
     ) {
         val logEntity = LogEntity(
             category = category,
             date = date,  // Use appropriate date
-            startTime = startTime,
-            endTime = endTime,
             totalHours = totalHours,
             notes = notes
         )

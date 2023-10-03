@@ -127,149 +127,6 @@ fun formatDate(date: Date): String {
     return dateFormat.format(date)
 }
 
-
-@Composable
-fun LogItem(log: LogEntity) {
-    // Display each property in a column
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .border(1.dp, Color.Gray),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column {
-            Text("Log ID: ${log.id}")
-            Text("Category: ${log.category}")
-            Text("Date: ${log.date}")
-        }
-        Column {
-            Text("Start Time: ${log.startTime}")
-            Text("End Time: ${log.endTime}")
-            Text("Total Hours: ${log.totalHours}")
-        }
-        Column {
-            Text("Notes: ${log.notes}")
-        }
-    }
-}
-
-@Composable
-fun LogList(logs: List<LogEntity>) {
-    LazyColumn(
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        if (logs.isNotEmpty()) {
-            item {
-                // Display column titles
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Gray)
-                        .padding(8.dp)
-                ) {
-                    Text("Log ID", fontWeight = FontWeight.Bold)
-                    Text("Category", fontWeight = FontWeight.Bold)
-                    Text("Date", fontWeight = FontWeight.Bold)
-                    Text("Start Time", fontWeight = FontWeight.Bold)
-                    Text("End Time", fontWeight = FontWeight.Bold)
-                    Text("Total Hours", fontWeight = FontWeight.Bold)
-                    Text("Notes", fontWeight = FontWeight.Bold)
-                }
-            }
-
-            // Display log items
-            items(logs) { log ->
-                LogItem(log = log)
-            }
-        } else {
-            item {
-                Text(text = "No Logs available.")
-            }
-        }
-    }
-}
-
-@Composable
-fun LogTableBox(viewModel: LogsViewModel) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.5f)
-            .border(2.dp, Color.Cyan)
-    ) {
-        Column {
-            Button(onClick = {
-                viewModel.insertLog(
-                    category = "Work",
-                    date = Date(),
-                    startTime = "09:00 AM",
-                    endTime = "05:00 PM",
-                    totalHours = 8.0,
-                    notes = "Completed project X."
-                )
-            }) {
-                Text("Insert Log")
-            }
-
-
-
-
-
-            Button(onClick = { viewModel.deleteAllLogs() }) {
-                Text("Delete All Logs")
-            }
-
-            val logs: List<LogEntity> by viewModel.allLogs.observeAsState(emptyList())
-
-            if (logs != null) {
-                LogList(logs)
-            } else {
-                Text(text = "Loading...")
-            }
-        }
-    }
-}
-
-@Composable
-fun UserDatabaseBox(viewModel: LogsViewModel) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.5f)
-            .border(2.dp, Color.Cyan)
-    ) {
-        Column {
-            Button(onClick = {
-                viewModel.insertUser("John", "Doe")
-            }) {
-                Text("Insert User")
-            }
-
-            Button(onClick = { viewModel.deleteAllUsers() }) {
-                Text("Delete All Users")
-            }
-
-            // Observe the allUsers LiveData
-            val users: List<User> by viewModel.allUsers.observeAsState(emptyList())
-
-            if (users != null) {
-                if (users.isNotEmpty()) {
-                    users.forEach { user ->
-                        Text(text = "User ID: ${user.uid}, Name: ${user.firstName} ${user.lastName}")
-                    }
-                } else {
-                    Text(text = "No users available.")
-                }
-            } else {
-                Text(text = "Loading...")
-            }
-        }
-    }
-}
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogMakerFloatingActionButton(
@@ -296,8 +153,6 @@ fun LogMakerFloatingActionButton(
         var expanded by remember { mutableStateOf(false) }
         var selectedCategory by remember { mutableStateOf(categories[0]) }
         var date by remember { mutableStateOf(Date()) }
-        var startTime by remember { mutableStateOf("") }
-        var endTime by remember { mutableStateOf("") }
         var totalHours by remember { mutableStateOf("") }
         var notes by remember { mutableStateOf("") }
 
@@ -336,18 +191,6 @@ fun LogMakerFloatingActionButton(
                     }
 
                     TextField(
-                        value = startTime,
-                        onValueChange = { startTime = it },
-                        label = { Text("Start Time") }
-                    )
-
-                    TextField(
-                        value = endTime,
-                        onValueChange = { endTime = it },
-                        label = { Text("End Time") }
-                    )
-
-                    TextField(
                         value = totalHours,
                         onValueChange = { totalHours = it },
                         label = { Text("Total Hours") },
@@ -366,8 +209,6 @@ fun LogMakerFloatingActionButton(
                     viewModel.insertLog(
                         category = selectedCategory,
                         date = date,
-                        startTime = startTime,
-                        endTime = endTime,
                         totalHours = totalHours.toDoubleOrNull() ?: 0.0,
                         notes = notes
                     )
