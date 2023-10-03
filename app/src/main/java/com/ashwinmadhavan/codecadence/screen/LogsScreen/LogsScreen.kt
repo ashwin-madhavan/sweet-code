@@ -43,6 +43,9 @@ import com.ashwinmadhavan.codecadence.screen.LogsScreen.Timer.Presentation
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import kotlin.math.pow
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -51,23 +54,41 @@ import java.util.Locale
 fun LogsScreen() {
     val viewModel: LogsViewModel = viewModel()
     val logs: List<LogEntity> by viewModel.allLogs.observeAsState(emptyList())
+    val stopWatch = remember { Domain() }
+
+    val categories = Constants.CATEGORIES
+
+    var showDialog by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedCategory by remember { mutableStateOf(categories[0]) }
+    var date by remember { mutableStateOf(Date()) }
+    var totalHours by remember { mutableStateOf("") }
+    var notes by remember { mutableStateOf("") }
 
     Scaffold(
         content = {
             Column {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFF212121)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    val stopWatch = remember { Domain() }
-                    Presentation(
-                        formattedTime = stopWatch.formattedTime,
-                        onStartClick = stopWatch::start,
-                        onPauseClick = stopWatch::pause,
-                        onResetClick = stopWatch::reset
-                    )
+                Row {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.75f)
+                            .background(Color(0xFF212121)),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Presentation(
+                            formattedTime = stopWatch.formattedTime,
+                            onStartClick = stopWatch::start,
+                            onPauseClick = stopWatch::pause,
+                            onResetClick = stopWatch::reset
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            showDialog = true
+                        }
+                    ) {
+                        Text(text = "Submit")
+                    }
                 }
 
                 Button(onClick = { viewModel.deleteAllLogs() }) {
@@ -78,6 +99,85 @@ fun LogsScreen() {
                 } else {
                     Text(text = "Loading...")
                 }
+            }
+
+            if (showDialog) {
+                AlertDialog(
+                    onDismissRequest = {
+                        showDialog = false
+                    },
+                    title = {
+                        Text(text = "Submit Log")
+                    },
+                    text = {
+                        val formattedTimeString = stopWatch.formattedTime
+
+                        var totalHours = formattedTimeString.split(":")
+                            .mapIndexed { index, value ->
+                                value.toDouble() / (60.0.pow(index.toDouble()))
+                            }
+                            .sum()
+
+                        Column {
+                            Text(text = "Total Hours: %.2f".format(totalHours))
+
+                            val currentTime = LocalTime.now()
+                            val timeHoursAgo = currentTime.minusHours(totalHours.toLong())
+
+                            Text(
+                                text = "Started At: ${
+                                    timeHoursAgo.format(
+                                        DateTimeFormatter.ofPattern("HH:mm a")
+                                    )
+                                }"
+                            )
+
+                            Column {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable(onClick = { expanded = true })
+                                        .background(Color.Gray)
+                                        .padding(16.dp)
+                                ) {
+                                    Text(text = "Select Category: $selectedCategory")
+                                }
+
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    categories.forEach { category ->
+                                        DropdownMenuItem(
+                                            text = {
+                                                Text(text = category)
+                                            },
+                                            onClick = {
+                                                selectedCategory = category
+                                                expanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+
+                            TextField(
+                                value = notes,
+                                onValueChange = { notes = it },
+                                label = { Text("Notes") }
+                            )
+                        }
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                showDialog = false
+                            }
+                        ) {
+                            Text(text = "OK")
+                        }
+                    }
+                )
             }
         },
         floatingActionButton = {
