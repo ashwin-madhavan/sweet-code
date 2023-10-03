@@ -1,4 +1,4 @@
-package com.ashwinmadhavan.codecadence.screen.LogsScreen
+package com.ashwinmadhavan.codecadence.screen.LogsScreen.Timer
 
 import android.os.Build
 import androidx.annotation.RequiresApi

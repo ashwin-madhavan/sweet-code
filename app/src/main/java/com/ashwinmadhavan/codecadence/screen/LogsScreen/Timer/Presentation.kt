@@ -1,4 +1,4 @@
-package com.ashwinmadhavan.codecadence.screen.LogsScreen
+package com.ashwinmadhavan.codecadence.screen.LogsScreen.Timer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
