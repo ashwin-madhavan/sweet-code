@@ -1,6 +1,8 @@
 package com.ashwinmadhavan.codecadence.screen.LogsScreen
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,6 +42,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +53,21 @@ fun LogsScreen() {
     Scaffold(
         content = {
             Column {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF212121)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    val stopWatch = remember { Domain() }
+                    Presentation(
+                        formattedTime = stopWatch.formattedTime,
+                        onStartClick = stopWatch::start,
+                        onPauseClick = stopWatch::pause,
+                        onResetClick = stopWatch::reset
+                    )
+                }
+
                 Button(onClick = { viewModel.deleteAllLogs() }) {
                     Text("Delete All Logs")
                 }

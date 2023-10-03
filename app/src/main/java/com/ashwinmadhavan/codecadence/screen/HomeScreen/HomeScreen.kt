@@ -64,11 +64,6 @@ fun HomeScreen(onItemClick: () -> Unit) {
     }
 }
 
-@Composable
-fun ProgressIndicator() {
-
-}
-
 
 @Composable
 fun CustomDoubleDisplay(double1: Double, double2: Double) {
