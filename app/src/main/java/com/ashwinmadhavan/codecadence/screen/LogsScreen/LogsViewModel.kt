@@ -24,7 +24,7 @@ class LogsViewModel : ViewModel() {
 
     fun insertLog(
         category: String,
-        date: Date,
+        date: String,
         totalHours: Double,
         notes: String
     ) {

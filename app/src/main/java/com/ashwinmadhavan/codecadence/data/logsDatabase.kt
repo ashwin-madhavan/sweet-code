@@ -8,38 +8,17 @@ import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 import androidx.room.Update
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Entity(tableName = "logs")
 data class LogEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,  // Autoincremented ID
     val category: String,
-    val date: Date,
+    val date: String,
     val totalHours: Double,
     val notes: String
 )
-
-object TimeConverter {
-    private val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-
-    @TypeConverter
-    @JvmStatic
-    fun fromTime(time: String): Date? {
-        return timeFormat.parse(time)
-    }
-
-    @TypeConverter
-    @JvmStatic
-    fun toTime(time: Date): String {
-        return timeFormat.format(time)
-    }
-}
 
 @Dao
 interface LogDao {
@@ -67,8 +46,7 @@ interface LogDao {
 }
 
 
-@Database(entities = [LogEntity::class], version = 2)
-@TypeConverters(TimeConverter::class)
+@Database(entities = [LogEntity::class], version = 4)
 abstract class LogDatabase : RoomDatabase() {
     abstract fun logDao(): LogDao
 }

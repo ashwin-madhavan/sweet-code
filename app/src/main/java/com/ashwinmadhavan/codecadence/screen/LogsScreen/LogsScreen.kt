@@ -41,7 +41,6 @@ import com.ashwinmadhavan.codecadence.data.LogEntity
 import com.ashwinmadhavan.codecadence.screen.LogsScreen.Timer.Domain
 import com.ashwinmadhavan.codecadence.screen.LogsScreen.Timer.Presentation
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.math.pow
@@ -60,7 +59,7 @@ fun LogsScreen() {
     var showDialog by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf(categories[0]) }
-    var date by remember { mutableStateOf(Date()) }
+    var date by remember { mutableStateOf("") }
     var totalHours by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
 
@@ -119,11 +118,11 @@ fun LogsScreen() {
 
                         Column {
                             Text(text = "Total Hours: %.2f".format(totalHours))
-                            val date = createDateFromTotalHours(totalHours)
-                            val formattedDate = formatCalendarDate(date)
+                            val dateObject = createDateFromTotalHours(totalHours)
+                            date = formatDateString(dateObject)
 
                             Text(
-                                text = "Started At: $formattedDate"
+                                text = "Started At: $date"
                             )
 
                             Column {
@@ -189,33 +188,20 @@ fun LogsScreen() {
     )
 }
 
-fun createDateFromTotalHours(totalHours: Double): Calendar {
-    val calendar = Calendar.getInstance()
-    val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
-    val currentMinute = calendar.get(Calendar.MINUTE)
-
-    var newHour = (currentHour - totalHours).toInt()
-    var newMinute = (currentMinute - (totalHours % 1 * 60)).toInt()
-
-    // Adjust if the subtraction caused the hour/minute to go negative
-    if (newMinute < 0) {
-        newHour -= 1
-        newMinute += 60
-    }
-
-    calendar.set(Calendar.HOUR_OF_DAY, newHour)
-    calendar.set(Calendar.MINUTE, newMinute)
-    calendar.set(Calendar.SECOND, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
-
-    return calendar
+fun createDateFromTotalHours(totalHours: Double): Date {
+    val currentDateTime = Date()
+    val millisecondsInHour = 3600000 // 1 hour in milliseconds
+    val timeToSubtract = (totalHours * millisecondsInHour).toLong()
+    val newDateTime = Date(currentDateTime.time - timeToSubtract)
+    return newDateTime
 }
 
-fun formatCalendarDate(calendar: Calendar): String {
-    val pattern = "MM/dd/yyyy h:mm a"
+fun formatDateString(date: Date): String {
+    val pattern = "MM/dd/yy h:mm a"
     val dateFormat = SimpleDateFormat(pattern, Locale.US)
-    return dateFormat.format(calendar.time)
+    return dateFormat.format(date)
 }
+
 @Composable
 fun RowScope.TableCell(
     text: String,
@@ -250,7 +236,7 @@ fun TableScreen(logs: List<LogEntity>) {
         // Here are all the lines of your table.
         items(logs) { log ->
             Row(Modifier.fillMaxWidth()) {
-                TableCell(text = log.date.toString(), weight = column1Weight)
+                TableCell(text = log.date, weight = column1Weight)
                 TableCell(text = log.category, weight = column2Weight)
                 TableCell(text = String.format("%.2f", log.totalHours), weight = column3Weight)
             }
@@ -284,7 +270,7 @@ fun LogMakerFloatingActionButton(
 
         var expanded by remember { mutableStateOf(false) }
         var selectedCategory by remember { mutableStateOf(categories[0]) }
-        var date by remember { mutableStateOf(Date()) }
+        var date by remember { mutableStateOf("") }
         var totalHours by remember { mutableStateOf("") }
         var notes by remember { mutableStateOf("") }
 
