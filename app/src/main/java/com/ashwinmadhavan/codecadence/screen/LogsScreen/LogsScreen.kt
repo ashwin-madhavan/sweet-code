@@ -41,10 +41,9 @@ import com.ashwinmadhavan.codecadence.data.LogEntity
 import com.ashwinmadhavan.codecadence.screen.LogsScreen.Timer.Domain
 import com.ashwinmadhavan.codecadence.screen.LogsScreen.Timer.Presentation
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import kotlin.math.pow
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -120,16 +119,11 @@ fun LogsScreen() {
 
                         Column {
                             Text(text = "Total Hours: %.2f".format(totalHours))
-
-                            val currentTime = LocalTime.now()
-                            val timeHoursAgo = currentTime.minusHours(totalHours.toLong())
+                            val date = createDateFromTotalHours(totalHours)
+                            val formattedDate = formatCalendarDate(date)
 
                             Text(
-                                text = "Started At: ${
-                                    timeHoursAgo.format(
-                                        DateTimeFormatter.ofPattern("HH:mm a")
-                                    )
-                                }"
+                                text = "Started At: $formattedDate"
                             )
 
                             Column {
@@ -171,6 +165,12 @@ fun LogsScreen() {
                     confirmButton = {
                         Button(
                             onClick = {
+                                viewModel.insertLog(
+                                    category = selectedCategory,
+                                    date = date,
+                                    totalHours = totalHours.toDoubleOrNull() ?: 0.0,
+                                    notes = notes
+                                )
                                 showDialog = false
                             }
                         ) {
@@ -189,6 +189,33 @@ fun LogsScreen() {
     )
 }
 
+fun createDateFromTotalHours(totalHours: Double): Calendar {
+    val calendar = Calendar.getInstance()
+    val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+    val currentMinute = calendar.get(Calendar.MINUTE)
+
+    var newHour = (currentHour - totalHours).toInt()
+    var newMinute = (currentMinute - (totalHours % 1 * 60)).toInt()
+
+    // Adjust if the subtraction caused the hour/minute to go negative
+    if (newMinute < 0) {
+        newHour -= 1
+        newMinute += 60
+    }
+
+    calendar.set(Calendar.HOUR_OF_DAY, newHour)
+    calendar.set(Calendar.MINUTE, newMinute)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+
+    return calendar
+}
+
+fun formatCalendarDate(calendar: Calendar): String {
+    val pattern = "MM/dd/yyyy h:mm a"
+    val dateFormat = SimpleDateFormat(pattern, Locale.US)
+    return dateFormat.format(calendar.time)
+}
 @Composable
 fun RowScope.TableCell(
     text: String,
@@ -205,17 +232,14 @@ fun RowScope.TableCell(
 
 @Composable
 fun TableScreen(logs: List<LogEntity>) {
-    // Each cell of a column must have the same weight.
-    val column1Weight = .45f // 30%
-    val column2Weight = .35f // 70%
-    val column3Weight = .2f // 30%
-    // The LazyColumn will be our table. Notice the use of the weights below
+    val column1Weight = .45f
+    val column2Weight = .35f
+    val column3Weight = .2f
     LazyColumn(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Here is the header
         item {
             Row(Modifier.background(Color.Gray)) {
                 TableCell(text = "Date", weight = column1Weight)
@@ -226,20 +250,14 @@ fun TableScreen(logs: List<LogEntity>) {
         // Here are all the lines of your table.
         items(logs) { log ->
             Row(Modifier.fillMaxWidth()) {
-                val date = Date() // Replace this with your Date object
-                val formattedDate = formatDate(date)
-                TableCell(text = formattedDate, weight = column1Weight)
+                TableCell(text = log.date.toString(), weight = column1Weight)
                 TableCell(text = log.category, weight = column2Weight)
-                TableCell(text = log.totalHours.toString(), weight = column3Weight)
+                TableCell(text = String.format("%.2f", log.totalHours), weight = column3Weight)
             }
         }
     }
 }
 
-fun formatDate(date: Date): String {
-    val dateFormat = SimpleDateFormat("MM/dd/yy h:mm a", Locale.getDefault())
-    return dateFormat.format(date)
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
