@@ -4,13 +4,10 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,13 +30,11 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ashwinmadhavan.codecadence.Constants
 import com.ashwinmadhavan.codecadence.data.LogEntity
-import com.ashwinmadhavan.codecadence.data.User
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -57,8 +52,6 @@ fun LogsScreen() {
                 Button(onClick = { viewModel.deleteAllLogs() }) {
                     Text("Delete All Logs")
                 }
-                //UserDatabaseBox(viewModel)
-                //LogTableBox(viewModel)
                 if (logs != null && logs.isNotEmpty()) {
                     TableScreen(logs)
                 } else {
