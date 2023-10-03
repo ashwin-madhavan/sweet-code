@@ -125,34 +125,13 @@ fun LogsScreen() {
                                 text = "Started At: $date"
                             )
 
-                            Column {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable(onClick = { expanded = true })
-                                        .background(Color.Gray)
-                                        .padding(16.dp)
-                                ) {
-                                    Text(text = "Select Category: $selectedCategory")
+                            DropdownCategorySelector(
+                                categories = categories,
+                                selectedCategory = selectedCategory,
+                                onCategorySelected = { newCategory ->
+                                    selectedCategory = newCategory
                                 }
-
-                                DropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }
-                                ) {
-                                    categories.forEach { category ->
-                                        DropdownMenuItem(
-                                            text = {
-                                                Text(text = category)
-                                            },
-                                            onClick = {
-                                                selectedCategory = category
-                                                expanded = false
-                                            }
-                                        )
-                                    }
-                                }
-                            }
+                            )
 
                             TextField(
                                 value = notes,
@@ -239,6 +218,44 @@ fun TableScreen(logs: List<LogEntity>) {
                 TableCell(text = log.date, weight = column1Weight)
                 TableCell(text = log.category, weight = column2Weight)
                 TableCell(text = String.format("%.2f", log.totalHours), weight = column3Weight)
+            }
+        }
+    }
+}
+
+@Composable
+fun DropdownCategorySelector(
+    categories: List<String>,
+    selectedCategory: String,
+    onCategorySelected: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = { expanded = true })
+                .background(Color.Gray)
+                .padding(16.dp)
+        ) {
+            Text(text = "Select Category: $selectedCategory")
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            categories.forEach { category ->
+                DropdownMenuItem(
+                    text = {
+                        Text(text = category)
+                    },
+                    onClick = {
+                        onCategorySelected(category)
+                        expanded = false
+                    }
+                )
             }
         }
     }
