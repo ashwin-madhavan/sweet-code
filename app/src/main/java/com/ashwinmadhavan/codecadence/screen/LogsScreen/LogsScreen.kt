@@ -40,7 +40,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ashwinmadhavan.codecadence.Constants
 import com.ashwinmadhavan.codecadence.data.LogEntity
 import com.ashwinmadhavan.codecadence.data.User
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,9 +92,9 @@ fun RowScope.TableCell(
 @Composable
 fun TableScreen(logs: List<LogEntity>) {
     // Each cell of a column must have the same weight.
-    val column1Weight = .3f // 30%
-    val column2Weight = .4f // 70%
-    val column3Weight = .3f // 30%
+    val column1Weight = .45f // 30%
+    val column2Weight = .35f // 70%
+    val column3Weight = .2f // 30%
     // The LazyColumn will be our table. Notice the use of the weights below
     LazyColumn(
         Modifier
@@ -110,12 +112,19 @@ fun TableScreen(logs: List<LogEntity>) {
         // Here are all the lines of your table.
         items(logs) { log ->
             Row(Modifier.fillMaxWidth()) {
-                TableCell(text = log.id.toString(), weight = column1Weight)
+                val date = Date() // Replace this with your Date object
+                val formattedDate = formatDate(date)
+                TableCell(text = formattedDate, weight = column1Weight)
                 TableCell(text = log.category, weight = column2Weight)
                 TableCell(text = log.totalHours.toString(), weight = column3Weight)
             }
         }
     }
+}
+
+fun formatDate(date: Date): String {
+    val dateFormat = SimpleDateFormat("MM/dd/yy h:mm a", Locale.getDefault())
+    return dateFormat.format(date)
 }
 
 
@@ -268,7 +277,6 @@ fun LogMakerFloatingActionButton(
     viewModel: LogsViewModel
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    var taskName by remember { mutableStateOf("") }
 
     FloatingActionButton(
         onClick = {

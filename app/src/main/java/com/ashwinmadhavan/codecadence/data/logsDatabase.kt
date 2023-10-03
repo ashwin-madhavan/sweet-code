@@ -21,7 +21,7 @@ import java.util.Locale
 @Entity(tableName = "logs")
 data class LogEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,  // Autoincremented UID
+    val id: Int = 0,  // Autoincremented ID
     val category: String,
     val date: Date,
     val startTime: String,

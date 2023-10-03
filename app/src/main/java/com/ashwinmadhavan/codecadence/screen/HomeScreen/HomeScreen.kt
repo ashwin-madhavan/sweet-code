@@ -7,13 +7,18 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -60,34 +65,37 @@ fun HomeScreen(onItemClick: () -> Unit) {
 }
 
 @Composable
+fun ProgressIndicator() {
+
+}
+
+
+@Composable
 fun CustomDoubleDisplay(double1: Double, double2: Double) {
     Row(
         modifier = Modifier,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        // Display the first double
         Text(
             text = String.format("%.2f", double1),
             style = MaterialTheme.typography.h6.copy(fontSize = 24.sp)
         )
-
-        // Display the separator
         Text(
             text = "/",
             style = MaterialTheme.typography.h6.copy(fontSize = 24.sp)
         )
+        Text(
+            text = String.format("%.2f", double2),
+            style = MaterialTheme.typography.h6.copy(fontSize = 24.sp)
+        )
 
-        // Display the second double (smaller font and bold)
-        Box(
-            modifier = Modifier
-                .align(Alignment.Bottom)
-        ) {
-            Text(
-                text = String.format("%.2f", double2),
-                style = MaterialTheme.typography.h6.copy(
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
+        var progress by remember { mutableStateOf(double1 / double2) }
+        Column {
+            CircularProgressIndicator(
+                progress = progress.toFloat(),
+                modifier = Modifier.padding(10.dp),
+                color = Color.Green
             )
         }
     }
@@ -104,7 +112,7 @@ fun viewTotalHrs(viewModel: HomeViewModel) {
             }
 
             else -> {
-               // Text(text = "Not Started")
+                // Text(text = "Not Started")
             }
         }
     }
