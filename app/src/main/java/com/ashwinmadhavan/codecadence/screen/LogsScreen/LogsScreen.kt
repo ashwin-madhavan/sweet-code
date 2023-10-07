@@ -57,10 +57,9 @@ fun LogsScreen() {
     val categories = Constants.CATEGORIES
 
     var showDialog by remember { mutableStateOf(false) }
-    var expanded by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf(categories[0]) }
     var date by remember { mutableStateOf("") }
-    var totalHours by remember { mutableStateOf("") }
+    var totalHours by remember { mutableStateOf(0.0) }
     var notes by remember { mutableStateOf("") }
 
     Scaffold(
@@ -110,11 +109,12 @@ fun LogsScreen() {
                     text = {
                         val formattedTimeString = stopWatch.formattedTime
 
-                        var totalHours = formattedTimeString.split(":")
+                        totalHours = formattedTimeString.split(":")
                             .mapIndexed { index, value ->
                                 value.toDouble() / (60.0.pow(index.toDouble()))
                             }
                             .sum()
+                        totalHours = 2.5
 
                         Column {
                             Text(text = "Total Hours: %.2f".format(totalHours))
@@ -146,7 +146,7 @@ fun LogsScreen() {
                                 viewModel.insertLog(
                                     category = selectedCategory,
                                     date = date,
-                                    totalHours = totalHours.toDoubleOrNull() ?: 0.0,
+                                    totalHours = totalHours,
                                     notes = notes
                                 )
                                 showDialog = false
