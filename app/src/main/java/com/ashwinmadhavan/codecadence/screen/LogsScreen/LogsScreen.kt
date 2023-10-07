@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,6 +28,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
@@ -66,7 +69,7 @@ fun LogsScreen() {
         content = {
             Column {
                 Row {
-                    Box(
+ /**                   Box(
                         modifier = Modifier
                             .fillMaxWidth(0.75f)
                             .background(Color(0xFF212121)),
@@ -79,13 +82,8 @@ fun LogsScreen() {
                             onResetClick = stopWatch::reset
                         )
                     }
-                    Button(
-                        onClick = {
-                            showDialog = true
-                        }
-                    ) {
-                        Text(text = "Submit")
-                    }
+ **/
+
                 }
 
                 Button(onClick = { viewModel.deleteAllLogs() }) {
@@ -107,17 +105,29 @@ fun LogsScreen() {
                         Text(text = "Submit Log")
                     },
                     text = {
-                        val formattedTimeString = stopWatch.formattedTime
-
-                        totalHours = formattedTimeString.split(":")
-                            .mapIndexed { index, value ->
-                                value.toDouble() / (60.0.pow(index.toDouble()))
-                            }
-                            .sum()
-                        totalHours = 2.5
+//                        val formattedTimeString = stopWatch.formattedTime
+//
+//                        totalHours = formattedTimeString.split(":")
+//                            .mapIndexed { index, value ->
+//                                value.toDouble() / (60.0.pow(index.toDouble()))
+//                            }
+//                            .sum()
 
                         Column {
                             Text(text = "Total Hours: %.2f".format(totalHours))
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Slider(
+                                value = totalHours.toFloat(),
+                                onValueChange = { newTotalHours ->
+                                    totalHours = newTotalHours.toDouble()
+                                },
+                                valueRange = 0.0f..3.0f, // Adjust the range based on your requirements
+                                steps = 0,
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .fillMaxWidth()
+                            )
+
                             val dateObject = createDateFromTotalHours(totalHours)
                             date = formatDateString(dateObject)
 
@@ -285,10 +295,9 @@ fun LogMakerFloatingActionButton(
     if (showDialog) {
         val categories = Constants.CATEGORIES
 
-        var expanded by remember { mutableStateOf(false) }
         var selectedCategory by remember { mutableStateOf(categories[0]) }
         var date by remember { mutableStateOf("") }
-        var totalHours by remember { mutableStateOf("") }
+        var totalHours by remember { mutableStateOf(0.0) }
         var notes by remember { mutableStateOf("") }
 
         AlertDialog(
@@ -296,40 +305,33 @@ fun LogMakerFloatingActionButton(
             title = { Text(text = title) },
             text = {
                 Column {
-                    Column {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable(onClick = { expanded = true })
-                                .background(Color.Gray)
-                                .padding(16.dp)
-                        ) {
-                            Text(text = "Select Category: $selectedCategory")
-                        }
+                    Text(text = "Total Hours: %.2f".format(totalHours))
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Slider(
+                        value = totalHours.toFloat(),
+                        onValueChange = { newTotalHours ->
+                            totalHours = newTotalHours.toDouble()
+                        },
+                        valueRange = 0.0f..2.0f, // Adjust the range based on your requirements
+                        steps = 0,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth()
+                    )
 
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            categories.forEach { category ->
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(text = category)
-                                    },
-                                    onClick = {
-                                        selectedCategory = category
-                                        expanded = false
-                                    }
-                                )
-                            }
-                        }
-                    }
+                    val dateObject = createDateFromTotalHours(totalHours)
+                    date = formatDateString(dateObject)
 
-                    TextField(
-                        value = totalHours,
-                        onValueChange = { totalHours = it },
-                        label = { Text("Total Hours") },
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                    Text(
+                        text = "Started At: $date"
+                    )
+
+                    DropdownCategorySelector(
+                        categories = categories,
+                        selectedCategory = selectedCategory,
+                        onCategorySelected = { newCategory ->
+                            selectedCategory = newCategory
+                        }
                     )
 
                     TextField(
@@ -344,7 +346,7 @@ fun LogMakerFloatingActionButton(
                     viewModel.insertLog(
                         category = selectedCategory,
                         date = date,
-                        totalHours = totalHours.toDoubleOrNull() ?: 0.0,
+                        totalHours = totalHours,
                         notes = notes
                     )
                     showDialog = false
