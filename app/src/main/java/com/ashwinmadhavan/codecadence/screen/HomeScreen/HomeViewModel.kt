@@ -12,6 +12,11 @@ class HomeViewModel : ViewModel() {
     private val _totalHoursMap = mutableMapOf<String, MutableLiveData<Double>>()
     val totalHoursMap: Map<String, LiveData<Double>> get() = _totalHoursMap
 
+    private val _totalHours = logDao.getTotalHoursLiveData()
+    private val totalHoursLiveData = MutableLiveData<Double>()
+    val totalHours: LiveData<Double>
+        get() = totalHoursLiveData
+
     private val defaultGoalHours = mapOf(
         "Work" to 10.0,
         "Array" to 5.0,
@@ -19,6 +24,7 @@ class HomeViewModel : ViewModel() {
         "Binary Tree" to 30.0
     )
     private val _goalHoursMap = mutableMapOf<String, MutableLiveData<Double>>()
+
     init {
         // Initialize LiveData for each category
         for (category in Constants.CATEGORIES) {
@@ -28,6 +34,10 @@ class HomeViewModel : ViewModel() {
 
         for (category in Constants.CATEGORIES) {
             _goalHoursMap[category] = MutableLiveData(defaultGoalHours[category] ?: 10.0)
+        }
+
+        _totalHours.observeForever { value ->
+            totalHoursLiveData.value = value ?: 0.0
         }
     }
 

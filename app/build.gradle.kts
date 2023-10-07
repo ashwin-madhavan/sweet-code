@@ -88,4 +88,6 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
 
     implementation ("androidx.compose.runtime:runtime-livedata:$1.5.2")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+
 }

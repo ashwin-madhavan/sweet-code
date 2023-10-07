@@ -38,6 +38,9 @@ interface LogDao {
     @Query("SELECT SUM(totalHours) FROM logs WHERE category = :category")
     fun getTotalHoursForCategory(category: String): LiveData<Double>
 
+    @Query("SELECT SUM(totalHours) FROM logs")
+    fun getTotalHoursLiveData(): LiveData<Double>
+
     @Query("DELETE FROM logs WHERE id = :logId")
     suspend fun deleteLogById(logId: Long)
 

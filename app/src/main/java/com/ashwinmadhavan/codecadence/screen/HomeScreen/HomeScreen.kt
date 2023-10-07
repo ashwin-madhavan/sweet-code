@@ -1,7 +1,7 @@
 package com.ashwinmadhavan.codecadence.screen.HomeScreen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -32,6 +32,8 @@ import com.ashwinmadhavan.codecadence.Constants
 @Composable
 fun HomeScreen(onItemClick: () -> Unit) {
     val viewModel: HomeViewModel = viewModel()
+    val totalHours by viewModel.totalHours.observeAsState(initial = 0.0)
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         // TODO: Not sure why the line below is needed to populate the progress bars
         viewModel.totalHoursMap.forEach { (category, totalHoursLiveData) ->
@@ -57,7 +59,9 @@ fun HomeScreen(onItemClick: () -> Unit) {
             )
         )
         Spacer(modifier = Modifier.height(16.dp))
-        CustomDoubleDisplay(double1 = 143.02, double2 = 200.00)
+
+
+        CustomDoubleDisplay( double1 = totalHours, double2 = 200.00)
         Text(text = "total hrs")
         Spacer(modifier = Modifier.height(16.dp))
         categoryItemList(viewModel = viewModel, onItemClick = onItemClick)
@@ -85,7 +89,10 @@ fun CustomDoubleDisplay(double1: Double, double2: Double) {
             style = MaterialTheme.typography.h6.copy(fontSize = 24.sp)
         )
 
+        Log.d("CustomDD double1 val: ", double1.toString())
         var progress by remember { mutableStateOf(double1 / double2) }
+        Log.d("CustomDD progress val: ", progress.toString())
+
         Column {
             CircularProgressIndicator(
                 progress = progress.toFloat(),
@@ -93,6 +100,8 @@ fun CustomDoubleDisplay(double1: Double, double2: Double) {
                 color = Color.Green
             )
         }
+
+        Log.d("CustomDD", "Checkpoint")
     }
 }
 
