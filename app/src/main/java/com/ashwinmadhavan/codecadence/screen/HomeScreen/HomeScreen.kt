@@ -6,13 +6,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -24,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,6 +41,7 @@ import com.ashwinmadhavan.codecadence.Constants
 fun HomeScreen(onItemClick: () -> Unit) {
     val viewModel: HomeViewModel = viewModel()
     val totalHours by viewModel.totalHours.observeAsState(initial = 0.0)
+    var showDialog by remember { mutableStateOf(false) }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         // TODO: Not sure why the line below is needed to populate the progress bars
@@ -61,10 +70,36 @@ fun HomeScreen(onItemClick: () -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
 
-        CustomDoubleDisplay( double1 = totalHours, double2 = 200.00)
+        CustomDoubleDisplay(double1 = totalHours, double2 = 200.00)
         Text(text = "total hrs")
         Spacer(modifier = Modifier.height(16.dp))
         categoryItemList(viewModel = viewModel, onItemClick = onItemClick)
+
+        Button(
+            onClick = { showDialog = true },
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
+            Text("Set Goal Hours")
+        }
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    showDialog = false
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        showDialog = false
+                    }) {
+                        Text("Set")
+                    }
+                },
+                text = {
+                    editableCategoryItemList(viewModel = viewModel)
+                }
+            )
+        }
     }
 }
 
@@ -106,19 +141,45 @@ fun CustomDoubleDisplay(double1: Double, double2: Double) {
 }
 
 @Composable
-fun viewTotalHrs(viewModel: HomeViewModel) {
-    viewModel.totalHoursMap.forEach { (category, totalHoursLiveData) ->
-        val totalHours: Double? by totalHoursLiveData.observeAsState(null)
+fun editableCategoryItemList(viewModel: HomeViewModel) {
+    val list = Constants.CATEGORIES.map { category ->
+        val goalHoursForCategory = viewModel.getGoalHours(category).value ?: 0.0
+        val totalHoursForCategory = viewModel.totalHoursMap[category]?.value ?: 0.0
+        CategoryItem(category, goalHoursForCategory, totalHoursForCategory)
+    }
 
-        when {
-            totalHours != null -> {
-                //Text(text = "Total $category Hours: $totalHours")
-            }
-
-            else -> {
-                // Text(text = "Not Started")
+    Column {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(all = 5.dp)
+        ) {
+            items(list) { item ->
+                CategoryItemRow(item, viewModel)
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
+    var goalHours by remember { mutableStateOf(categoryItem.goalHours.toString()) }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = categoryItem.name)
+        Spacer(modifier = Modifier.width(16.dp))
+        TextField(
+            value = goalHours,
+            onValueChange = {
+                goalHours = it
+                viewModel.setGoalHours(categoryItem.name, it.toDoubleOrNull() ?: 0.0)
+            },
+            label = { Text("Goal Hours") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
     }
 }
 
