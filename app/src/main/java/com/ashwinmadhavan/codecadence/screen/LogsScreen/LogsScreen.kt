@@ -35,7 +35,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ashwinmadhavan.codecadence.Constants
@@ -332,14 +331,14 @@ fun LogMakerFloatingActionButton(
             title = { Text(text = title) },
             text = {
                 Column {
-                    Text(text = "Total Hours: %.2f".format(totalHours))
+                    DisplayTotalHours(totalHours = totalHours)
                     Spacer(modifier = Modifier.height(16.dp))
                     Slider(
                         value = totalHours.toFloat(),
                         onValueChange = { newTotalHours ->
                             totalHours = newTotalHours.toDouble()
                         },
-                        valueRange = 0.0f..2.0f, // Adjust the range based on your requirements
+                        valueRange = 0.0f..2.5f,
                         steps = 0,
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
@@ -383,4 +382,22 @@ fun LogMakerFloatingActionButton(
             }
         )
     }
+}
+
+@Composable
+fun DisplayTotalHours(totalHours: Double) {
+    val hours = totalHours.toInt()
+    val minutes = ((totalHours - hours) * 60).toInt()
+
+    val formattedTotalHours = if (hours > 0) {
+        if (minutes > 0) {
+            "$hours hours and $minutes mins"
+        } else {
+            "$hours hours"
+        }
+    } else {
+        "$minutes mins"
+    }
+
+    Text(text = "Total Hours: $formattedTotalHours")
 }
