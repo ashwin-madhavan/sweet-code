@@ -226,6 +226,8 @@ fun TableScreen(logs: List<LogEntity>, viewModel: LogsViewModel) {
     val column3Weight = .15f
     val deleteColumnWeight = .1f
 
+    val reversedLogs = logs.reversed()
+
     LazyColumn(
         Modifier
             .fillMaxSize()
@@ -244,7 +246,7 @@ fun TableScreen(logs: List<LogEntity>, viewModel: LogsViewModel) {
             }
         }
 
-        items(logs) { log ->
+        items(reversedLogs) { log ->
             Row(Modifier.fillMaxWidth()) {
                 TableCell(text = log.date, weight = column1Weight)
                 TableCell(text = log.category, weight = column2Weight)
