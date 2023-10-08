@@ -1,7 +1,9 @@
 package com.ashwinmadhavan.codecadence.screen.LogsScreen
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,7 +19,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
@@ -33,20 +34,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ashwinmadhavan.codecadence.Constants
 import com.ashwinmadhavan.codecadence.data.LogEntity
 import com.ashwinmadhavan.codecadence.screen.LogsScreen.Timer.Domain
-import com.ashwinmadhavan.codecadence.screen.LogsScreen.Timer.Presentation
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.math.pow
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -69,20 +67,20 @@ fun LogsScreen() {
         content = {
             Column {
                 Row {
- /**                   Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.75f)
-                            .background(Color(0xFF212121)),
-                        contentAlignment = Alignment.Center,
+                    /**                   Box(
+                    modifier = Modifier
+                    .fillMaxWidth(0.75f)
+                    .background(Color(0xFF212121)),
+                    contentAlignment = Alignment.Center,
                     ) {
-                        Presentation(
-                            formattedTime = stopWatch.formattedTime,
-                            onStartClick = stopWatch::start,
-                            onPauseClick = stopWatch::pause,
-                            onResetClick = stopWatch::reset
-                        )
+                    Presentation(
+                    formattedTime = stopWatch.formattedTime,
+                    onStartClick = stopWatch::start,
+                    onPauseClick = stopWatch::pause,
+                    onResetClick = stopWatch::reset
+                    )
                     }
- **/
+                     **/
 
                 }
 
@@ -92,7 +90,7 @@ fun LogsScreen() {
                 if (logs != null && logs.isNotEmpty()) {
                     TableScreen(logs)
                 } else {
-                    Text(text = "Loading...")
+                    Text(text = "No logs to display yet! Click the + to get started.")
                 }
             }
 
@@ -105,14 +103,14 @@ fun LogsScreen() {
                         Text(text = "Submit Log")
                     },
                     text = {
-//                        val formattedTimeString = stopWatch.formattedTime
-//
-//                        totalHours = formattedTimeString.split(":")
-//                            .mapIndexed { index, value ->
-//                                value.toDouble() / (60.0.pow(index.toDouble()))
-//                            }
-//                            .sum()
+                        /**                        val formattedTimeString = stopWatch.formattedTime
 
+                        totalHours = formattedTimeString.split(":")
+                        .mapIndexed { index, value ->
+                        value.toDouble() / (60.0.pow(index.toDouble()))
+                        }
+                        .sum()
+                         **/
                         Column {
                             Text(text = "Total Hours: %.2f".format(totalHours))
                             Spacer(modifier = Modifier.height(16.dp))
@@ -199,27 +197,58 @@ fun RowScope.TableCell(
     Text(
         text = text,
         Modifier
-            .border(1.dp, Color.Black)
+            .border(1.dp, Color.White) // Set border color to white
             .weight(weight)
             .padding(8.dp)
+            .height(22.dp)
     )
 }
 
 @Composable
+fun RowScope.TableCellBtn(
+    buttonText: String,
+    weight: Float,
+    context: Context
+) {
+    Button(
+        onClick = {
+            Toast.makeText(context, "Button Clicked: $buttonText", Toast.LENGTH_SHORT).show()
+        },
+        modifier = Modifier
+            .border(1.dp, Color.White)
+            .weight(weight)
+            .padding(8.dp)
+            .height(22.dp)
+    ) {
+        Text(text = buttonText)
+    }
+}
+
+
+@Composable
 fun TableScreen(logs: List<LogEntity>) {
     val column1Weight = .45f
-    val column2Weight = .35f
-    val column3Weight = .2f
+    val column2Weight = .3f
+    val column3Weight = .15f
+    val deleteColumnWeight = .1f
+
+    val context = LocalContext.current
+
     LazyColumn(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         item {
-            Row(Modifier.background(Color.Gray)) {
+            Row(
+                Modifier
+                    .background(Color.Gray)
+                    .fillMaxWidth()
+            ) {
                 TableCell(text = "Date", weight = column1Weight)
                 TableCell(text = "Category", weight = column2Weight)
                 TableCell(text = "Hrs", weight = column3Weight)
+                TableCell(text = "", weight = deleteColumnWeight)
             }
         }
         // Here are all the lines of your table.
@@ -228,10 +257,12 @@ fun TableScreen(logs: List<LogEntity>) {
                 TableCell(text = log.date, weight = column1Weight)
                 TableCell(text = log.category, weight = column2Weight)
                 TableCell(text = String.format("%.2f", log.totalHours), weight = column3Weight)
+                TableCellBtn(buttonText = "Delete", weight = deleteColumnWeight, context = context)
             }
         }
     }
 }
+
 
 @Composable
 fun DropdownCategorySelector(
