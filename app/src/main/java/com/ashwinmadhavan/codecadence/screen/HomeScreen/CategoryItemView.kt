@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
@@ -43,9 +44,16 @@ fun CategoryItemView(maxGoalHrs: Double, categoryItem: CategoryItem, onClick: ()
                     .padding(end = 4.dp)
             )
 
-
             val progress = (categoryItem.completedHours / categoryItem.goalHours).toFloat()
             val barLen = (categoryItem.goalHours / maxGoalHrs).toFloat()
+
+            val color = when {
+                progress <= 0.25f -> Color.Red // 0-20% progress
+                progress <= 0.5f -> Color(1.0f, 0.5f, 0.0f, 1.0f) // 20-50% progress (orange)
+                progress <= 0.75f -> Color.Yellow // 50-80% progress
+                else -> Color.Green // 80-100% progress
+            }
+
             Box(
                 modifier = Modifier
                     .weight(0.75f)
@@ -54,8 +62,8 @@ fun CategoryItemView(maxGoalHrs: Double, categoryItem: CategoryItem, onClick: ()
                 LinearProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth(barLen)
-                        .height(16.dp)  // Adjust the height to make the bar thicker
-                        .background(Color.Cyan),
+                        .height(16.dp),
+                    color = color, // Set color dynamically based on progress
                     progress = progress,
                 )
             }

@@ -130,7 +130,6 @@ fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
         CategoryItem(category, goalHoursForCategory, totalHoursForCategory)
     }
 
-    // Calculate the maximum goal hours
     val maxGoalHours = list.maxByOrNull { it.goalHours }?.goalHours ?: 0.0
     Column {
         LazyColumn(
