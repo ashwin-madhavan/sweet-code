@@ -8,7 +8,6 @@ import com.ashwinmadhavan.codecadence.MyApplication
 import com.ashwinmadhavan.codecadence.data.LogEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Date
 
 class LogsViewModel : ViewModel() {
     private val logDao = MyApplication.logDatabase.logDao()
@@ -38,6 +37,12 @@ class LogsViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             logDao.insertLog(logEntity)
             _allLogs.postValue(logDao.getAllLogs().value)
+        }
+    }
+
+    fun deleteLogByID(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            logDao.deleteLogById(id)
         }
     }
 

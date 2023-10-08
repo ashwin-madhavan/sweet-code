@@ -1,9 +1,7 @@
 package com.ashwinmadhavan.codecadence.screen.LogsScreen
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -41,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ashwinmadhavan.codecadence.Constants
 import com.ashwinmadhavan.codecadence.data.LogEntity
-import com.ashwinmadhavan.codecadence.screen.LogsScreen.Timer.Domain
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -53,7 +51,7 @@ import java.util.Locale
 fun LogsScreen() {
     val viewModel: LogsViewModel = viewModel()
     val logs: List<LogEntity> by viewModel.allLogs.observeAsState(emptyList())
-    val stopWatch = remember { Domain() }
+    //val stopWatch = remember { Domain() }
 
     val categories = Constants.CATEGORIES
 
@@ -88,7 +86,7 @@ fun LogsScreen() {
                     Text("Delete All Logs")
                 }
                 if (logs != null && logs.isNotEmpty()) {
-                    TableScreen(logs)
+                    TableScreen(logs, viewModel = viewModel)
                 } else {
                     Text(text = "No logs to display yet! Click the + to get started.")
                 }
@@ -208,25 +206,23 @@ fun RowScope.TableCell(
 fun RowScope.TableCellBtn(
     buttonText: String,
     weight: Float,
-    context: Context
+    onLogDelete: () -> Unit
 ) {
-    Button(
-        onClick = {
-            Toast.makeText(context, "Button Clicked: $buttonText", Toast.LENGTH_SHORT).show()
-        },
+    Icon(
+        imageVector = Icons.Default.Delete,
+        contentDescription = "Delete",
         modifier = Modifier
+            .clickable { onLogDelete() }
             .border(1.dp, Color.White)
             .weight(weight)
             .padding(8.dp)
             .height(22.dp)
-    ) {
-        Text(text = buttonText)
-    }
+    )
 }
 
 
 @Composable
-fun TableScreen(logs: List<LogEntity>) {
+fun TableScreen(logs: List<LogEntity>, viewModel: LogsViewModel) {
     val column1Weight = .45f
     val column2Weight = .3f
     val column3Weight = .15f
@@ -257,7 +253,11 @@ fun TableScreen(logs: List<LogEntity>) {
                 TableCell(text = log.date, weight = column1Weight)
                 TableCell(text = log.category, weight = column2Weight)
                 TableCell(text = String.format("%.2f", log.totalHours), weight = column3Weight)
-                TableCellBtn(buttonText = "Delete", weight = deleteColumnWeight, context = context)
+                TableCellBtn(
+                    buttonText = "Delete",
+                    weight = deleteColumnWeight,
+                    onLogDelete = { viewModel.deleteLogByID(log.id.toLong()) }
+                )
             }
         }
     }
