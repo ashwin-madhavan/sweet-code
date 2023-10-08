@@ -204,7 +204,6 @@ fun RowScope.TableCell(
 
 @Composable
 fun RowScope.TableCellBtn(
-    buttonText: String,
     weight: Float,
     onLogDelete: () -> Unit
 ) {
@@ -228,8 +227,6 @@ fun TableScreen(logs: List<LogEntity>, viewModel: LogsViewModel) {
     val column3Weight = .15f
     val deleteColumnWeight = .1f
 
-    val context = LocalContext.current
-
     LazyColumn(
         Modifier
             .fillMaxSize()
@@ -247,14 +244,13 @@ fun TableScreen(logs: List<LogEntity>, viewModel: LogsViewModel) {
                 TableCell(text = "", weight = deleteColumnWeight)
             }
         }
-        // Here are all the lines of your table.
+
         items(logs) { log ->
             Row(Modifier.fillMaxWidth()) {
                 TableCell(text = log.date, weight = column1Weight)
                 TableCell(text = log.category, weight = column2Weight)
                 TableCell(text = String.format("%.2f", log.totalHours), weight = column3Weight)
                 TableCellBtn(
-                    buttonText = "Delete",
                     weight = deleteColumnWeight,
                     onLogDelete = { viewModel.deleteLogByID(log.id.toLong()) }
                 )
