@@ -12,14 +12,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -31,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -169,19 +172,42 @@ fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = categoryItem.name)
-        Spacer(modifier = Modifier.width(16.dp))
-        TextField(
-            value = goalHours,
-            onValueChange = {
-                goalHours = it
-                viewModel.setGoalHours(categoryItem.name, it.toDoubleOrNull() ?: 0.0)
-            },
-            label = { Text("Goal Hours") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        // Text taking half the row
+        Text(
+            text = categoryItem.name,
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 16.dp)
         )
+
+        // Decrement button
+        IconButton(onClick = {
+            val updatedGoalHours = (goalHours.toDoubleOrNull() ?: 0.0) - 1.0
+            goalHours = updatedGoalHours.toString()
+            viewModel.setGoalHours(categoryItem.name, updatedGoalHours)
+        }) {
+            Icon(imageVector = Icons.Default.Close, contentDescription = "Decrement")
+        }
+
+        // Goal Hours display
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = goalHours,
+            modifier = Modifier.width(50.dp)
+        )
+
+        // Increment button
+        IconButton(onClick = {
+            val updatedGoalHours = (goalHours.toDoubleOrNull() ?: 0.0) + 1.0
+            goalHours = updatedGoalHours.toString()
+            viewModel.setGoalHours(categoryItem.name, updatedGoalHours)
+        }) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = "Increment")
+        }
     }
 }
+
+
 
 @Composable
 fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
