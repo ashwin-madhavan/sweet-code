@@ -53,11 +53,7 @@ fun HomeScreen(onItemClick: () -> Unit) {
     val totalHours by viewModel.totalHours.observeAsState(initial = 0.0)
     var showDialog by remember { mutableStateOf(false) }
 
-
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-        onPressButton()
-
         // TODO: Not sure why the line below is needed to populate the progress bars
         viewModel.totalHoursMap.forEach { (category, totalHoursLiveData) ->
             val totalHours: Double? by totalHoursLiveData.observeAsState(null)
@@ -116,60 +112,6 @@ fun HomeScreen(onItemClick: () -> Unit) {
         }
     }
 }
-
-@Composable
-fun onPressButton() {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    val interactionSource2 = remember { MutableInteractionSource() }
-    val isPressed2 by interactionSource2.collectIsPressedAsState()
-
-    var currentStateTxt by remember { mutableStateOf("Not Pressed") }
-    var currentStateTxt2 by remember { mutableStateOf("Not Pressed") }
-    var currentCount by remember { mutableStateOf(0) }
-
-    if (isPressed) {
-        currentStateTxt = "Pressed"
-        currentCount += 1
-
-        DisposableEffect(Unit) {
-            onDispose {
-                currentStateTxt = "Released"
-            }
-        }
-    }
-
-    if (isPressed2) {
-        currentStateTxt2 = "Pressed"
-        if (currentCount > 0) {
-            currentCount -= 1
-        } else {
-            currentCount = 0
-        }
-
-        DisposableEffect(Unit) {
-            onDispose {
-                //released
-                currentStateTxt2 = "Released"
-            }
-        }
-    }
-
-    Button(
-        onClick = {},
-        interactionSource = interactionSource
-    ) {
-        Text("Current state = $currentStateTxt")
-    }
-    Button(
-        onClick = {},
-        interactionSource = interactionSource2
-    ) {
-        Text("Current state2 = $currentStateTxt2")
-    }
-    Text("Count = $currentCount")
-}
-
 
 @Composable
 fun CustomDoubleDisplay(double1: Double, double2: Double) {
