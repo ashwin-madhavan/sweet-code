@@ -1,6 +1,8 @@
 package com.ashwinmadhavan.codecadence.screen.HomeScreen
 
 import android.util.Log
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,9 +24,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +48,11 @@ fun HomeScreen(onItemClick: () -> Unit) {
     val totalHours by viewModel.totalHours.observeAsState(initial = 0.0)
     var showDialog by remember { mutableStateOf(false) }
 
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+        onPressButton()
+
         // TODO: Not sure why the line below is needed to populate the progress bars
         viewModel.totalHoursMap.forEach { (category, totalHoursLiveData) ->
             val totalHours: Double? by totalHoursLiveData.observeAsState(null)
@@ -104,6 +110,64 @@ fun HomeScreen(onItemClick: () -> Unit) {
             )
         }
     }
+}
+
+@Composable
+fun onPressButton() {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionSource2 = remember { MutableInteractionSource() }
+    val isPressed2 by interactionSource2.collectIsPressedAsState()
+
+    var currentStateTxt by remember { mutableStateOf("Not Pressed") }
+    var currentStateTxt2 by remember { mutableStateOf("Not Pressed") }
+    var currentCount by remember { mutableStateOf(0) }
+
+    if (isPressed) {
+        //Pressed
+        currentStateTxt = "Pressed"
+        currentCount += 1
+
+        //Use if + DisposableEffect to wait for the press action is completed
+        DisposableEffect(Unit) {
+            onDispose {
+                //released
+                currentStateTxt = "Released"
+            }
+        }
+    }
+
+    if (isPressed2) {
+        //Pressed
+        currentStateTxt2 = "Pressed"
+        if (currentCount > 0) {
+            currentCount -= 1
+        } else {
+            currentCount = 0
+        }
+
+        //Use if + DisposableEffect to wait for the press action is completed
+        DisposableEffect(Unit) {
+            onDispose {
+                //released
+                currentStateTxt2 = "Released"
+            }
+        }
+    }
+
+    Button(
+        onClick = {},
+        interactionSource = interactionSource
+    ) {
+        Text("Current state = $currentStateTxt")
+    }
+    Button(
+        onClick = {},
+        interactionSource = interactionSource2
+    ) {
+        Text("Current state2 = $currentStateTxt2")
+    }
+    Text("Count = $currentCount")
 }
 
 
@@ -206,7 +270,6 @@ fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
         }
     }
 }
-
 
 
 @Composable
