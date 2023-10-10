@@ -1,6 +1,8 @@
 package com.ashwinmadhavan.codecadence.screen.HomeScreen
 
+import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -8,12 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
@@ -23,7 +26,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -31,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ashwinmadhavan.codecadence.Constants
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(onItemClick: () -> Unit) {
@@ -227,46 +232,94 @@ fun editableCategoryItemList(viewModel: HomeViewModel) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
-    var goalHours by remember { mutableStateOf(categoryItem.goalHours.toString()) }
+    val plusButtonInteractionSource = remember { MutableInteractionSource() }
+    val isPlusButtonPressed by plusButtonInteractionSource.collectIsPressedAsState()
+
+    val minusButtonInteractionSource = remember { MutableInteractionSource() }
+    val isMinusButtonPressed by minusButtonInteractionSource.collectIsPressedAsState()
+
+    var currentCount by remember { mutableStateOf(categoryItem.goalHours) }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    DisposableEffect(Unit) {
+        val plusJob = coroutineScope.launch {
+            while (true) {
+                if (isPlusButtonPressed) {
+                    currentCount += 1
+                }
+                delay(75)
+            }
+        }
+
+        val minusJob = coroutineScope.launch {
+            while (true) {
+                if (isMinusButtonPressed && currentCount > 0) {
+                    currentCount -= 1
+                }
+                delay(75)
+            }
+        }
+
+        onDispose {
+            plusJob.cancel()
+            minusJob.cancel()
+        }
+    }
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Text taking half the row
         Text(
             text = categoryItem.name,
             modifier = Modifier
-                .weight(1f)
-                .padding(end = 16.dp)
+                .weight(0.6f)
+                .padding(end = 8.dp),
+            fontSize = 16.sp
         )
 
-        // Decrement button
-        IconButton(onClick = {
-            val updatedGoalHours = (goalHours.toDoubleOrNull() ?: 0.0) - 1.0
-            goalHours = updatedGoalHours.toString()
-            viewModel.setGoalHours(categoryItem.name, updatedGoalHours)
-        }) {
-            Icon(imageVector = Icons.Default.Close, contentDescription = "Decrement")
+        IconButton(
+            onClick = {
+                viewModel.setGoalHours(categoryItem.name, currentCount)
+            },
+            interactionSource = minusButtonInteractionSource,
+            modifier = Modifier
+                .size(48.dp)
+                .background(Color.Gray, CircleShape)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Decrement",
+                tint = Color.White
+            )
         }
 
-        // Goal Hours display
-        Spacer(modifier = Modifier.width(16.dp))
         Text(
-            text = goalHours,
-            modifier = Modifier.width(50.dp)
+            text = "${currentCount.toInt()}",
+            fontSize = 16.sp,
+            modifier = Modifier
+                .weight(0.2f)
+                .wrapContentSize(Alignment.Center)
         )
 
-        // Increment button
-        IconButton(onClick = {
-            val updatedGoalHours = (goalHours.toDoubleOrNull() ?: 0.0) + 1.0
-            goalHours = updatedGoalHours.toString()
-            viewModel.setGoalHours(categoryItem.name, updatedGoalHours)
-        }) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "Increment")
+        IconButton(
+            onClick = {
+                viewModel.setGoalHours(categoryItem.name, currentCount)
+            },
+            interactionSource = plusButtonInteractionSource,
+            modifier = Modifier
+                .size(48.dp)
+                .background(Color.Gray, CircleShape)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Increment",
+                tint = Color.White
+            )
         }
     }
 }
