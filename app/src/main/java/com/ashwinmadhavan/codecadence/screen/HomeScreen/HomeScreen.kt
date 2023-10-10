@@ -221,6 +221,9 @@ fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
 
         IconButton(
             onClick = {
+                if (currentCount > 0) {
+                    currentCount -= 1
+                }
                 viewModel.setGoalHours(categoryItem.name, currentCount)
             },
             interactionSource = minusButtonInteractionSource,
@@ -245,6 +248,7 @@ fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
 
         IconButton(
             onClick = {
+                currentCount += 1
                 viewModel.setGoalHours(categoryItem.name, currentCount)
             },
             interactionSource = plusButtonInteractionSource,
