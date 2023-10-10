@@ -129,21 +129,17 @@ fun onPressButton() {
     var currentCount by remember { mutableStateOf(0) }
 
     if (isPressed) {
-        //Pressed
         currentStateTxt = "Pressed"
         currentCount += 1
 
-        //Use if + DisposableEffect to wait for the press action is completed
         DisposableEffect(Unit) {
             onDispose {
-                //released
                 currentStateTxt = "Released"
             }
         }
     }
 
     if (isPressed2) {
-        //Pressed
         currentStateTxt2 = "Pressed"
         if (currentCount > 0) {
             currentCount -= 1
@@ -151,7 +147,6 @@ fun onPressButton() {
             currentCount = 0
         }
 
-        //Use if + DisposableEffect to wait for the press action is completed
         DisposableEffect(Unit) {
             onDispose {
                 //released
