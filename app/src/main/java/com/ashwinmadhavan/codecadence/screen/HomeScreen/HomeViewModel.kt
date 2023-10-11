@@ -24,24 +24,17 @@ class HomeViewModel(private val context: Context) : ViewModel() {
         context.getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
 
     private val defaultGoalHoursKey = "defaultGoalHours"
-    private val defaultGoalHours = mapOf(
-        "Work" to 10.0,
-        "Array" to 5.0,
-        "Stack" to 20.0,
-        "Binary Tree" to 30.0
-    )
+    private val defaultGoalHours: Map<String, Double> = emptyMap()
 
     private val _goalHoursMap = mutableMapOf<String, MutableLiveData<Double>>()
 
     init {
-        // Initialize LiveData for each category
         for (category in Constants.CATEGORIES) {
             _totalHoursMap[category] = MutableLiveData()
             fetchTotalHoursForCategory(category)
         }
 
         loadDefaultGoalHours()
-
 
         _totalHours.observeForever { value ->
             totalHoursLiveData.value = value ?: 0.0
@@ -76,10 +69,6 @@ class HomeViewModel(private val context: Context) : ViewModel() {
         logDao.getTotalHoursForCategory(category).observeForever { totalHours ->
             _totalHoursMap[category]?.value = totalHours
         }
-    }
-
-    fun setGoalHours(category: String, goalHours: Double) {
-        _goalHoursMap[category]?.value = goalHours
     }
 
     fun getGoalHours(category: String): LiveData<Double> {
