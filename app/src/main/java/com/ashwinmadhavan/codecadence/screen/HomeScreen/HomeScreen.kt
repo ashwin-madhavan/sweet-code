@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -49,7 +50,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(onItemClick: () -> Unit) {
-    val viewModel: HomeViewModel = viewModel()
+    val viewModel: HomeViewModel = viewModel(factory = HomeViewModelFactory(context = LocalContext.current))
     val totalHours by viewModel.totalHours.observeAsState(initial = 0.0)
     var showDialog by remember { mutableStateOf(false) }
 
@@ -224,7 +225,7 @@ fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
                 if (currentCount > 0) {
                     currentCount -= 1
                 }
-                viewModel.setGoalHours(categoryItem.name, currentCount)
+                viewModel.updateGoalHours(categoryItem.name, currentCount)
             },
             interactionSource = minusButtonInteractionSource,
             modifier = Modifier
@@ -249,7 +250,7 @@ fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
         IconButton(
             onClick = {
                 currentCount += 1
-                viewModel.setGoalHours(categoryItem.name, currentCount)
+                viewModel.updateGoalHours(categoryItem.name, currentCount)
             },
             interactionSource = plusButtonInteractionSource,
             modifier = Modifier
