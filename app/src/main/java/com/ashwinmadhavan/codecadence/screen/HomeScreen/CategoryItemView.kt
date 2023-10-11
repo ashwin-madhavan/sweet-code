@@ -1,6 +1,5 @@
 package com.ashwinmadhavan.codecadence.screen.HomeScreen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
@@ -36,7 +34,6 @@ fun CategoryItemView(maxGoalHrs: Double, categoryItem: CategoryItem, onClick: ()
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Study item name
             Text(
                 text = categoryItem.name,
                 modifier = Modifier
@@ -48,10 +45,10 @@ fun CategoryItemView(maxGoalHrs: Double, categoryItem: CategoryItem, onClick: ()
             val barLen = (categoryItem.goalHours / maxGoalHrs).toFloat()
 
             val color = when {
-                progress <= 0.25f -> Color.Red // 0-20% progress
-                progress <= 0.5f -> Color(1.0f, 0.5f, 0.0f, 1.0f) // 20-50% progress (orange)
-                progress <= 0.75f -> Color.Yellow // 50-80% progress
-                else -> Color.Green // 80-100% progress
+                progress <= 0.25f -> Color.Red
+                progress <= 0.5f -> Color(1.0f, 0.5f, 0.0f, 1.0f)
+                progress <= 0.75f -> Color.Yellow
+                else -> Color.Green
             }
 
             Box(
