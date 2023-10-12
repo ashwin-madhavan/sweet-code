@@ -86,7 +86,7 @@ fun HomeScreen(onItemClick: () -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
 
-        CustomDoubleDisplay(double1 = totalHours, double2 = 200.00)
+        CustomDoubleDisplay(double1 = totalHours, double2 = viewModel.totalGoalHours)
         Text(text = "total hrs")
         Spacer(modifier = Modifier.height(16.dp))
         categoryItemList(viewModel = viewModel, onItemClick = onItemClick)

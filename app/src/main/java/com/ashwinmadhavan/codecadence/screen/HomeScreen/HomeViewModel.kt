@@ -27,6 +27,7 @@ class HomeViewModel(private val context: Context) : ViewModel() {
     private val defaultGoalHours: Map<String, Double> = emptyMap()
 
     private val _goalHoursMap = mutableMapOf<String, MutableLiveData<Double>>()
+    var totalGoalHours: Double = 0.0
 
     init {
         for (category in Constants.CATEGORIES) {
@@ -42,19 +43,23 @@ class HomeViewModel(private val context: Context) : ViewModel() {
     }
 
     private fun loadDefaultGoalHours() {
+        totalGoalHours = 0.0 // Reset totalGoalHours
         for (category in Constants.CATEGORIES) {
             val defaultValue = defaultGoalHours[category] ?: 10.0
             val savedValue =
                 sharedPreferences.getFloat(defaultGoalHoursKey + category, defaultValue.toFloat())
             _goalHoursMap[category] = MutableLiveData(savedValue.toDouble())
+            totalGoalHours += savedValue.toDouble() // Update totalGoalHours
         }
     }
 
     private fun saveDefaultGoalHours() {
         val editor = sharedPreferences.edit()
+        totalGoalHours = 0.0 // Reset totalGoalHours
         for (category in Constants.CATEGORIES) {
             _goalHoursMap[category]?.value?.toFloat()?.let {
                 editor.putFloat(defaultGoalHoursKey + category, it)
+                totalGoalHours += it.toDouble() // Update totalGoalHours
             }
         }
         editor.apply()
