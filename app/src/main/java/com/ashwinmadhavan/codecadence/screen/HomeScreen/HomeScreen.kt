@@ -91,12 +91,25 @@ fun HomeScreen(onItemClick: () -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
         categoryItemList(viewModel = viewModel, onItemClick = onItemClick)
 
-        Button(
-            onClick = { showDialog = true },
-            modifier = Modifier
-                .padding(8.dp)
-        ) {
-            Text("Set Goal Hours")
+
+        Spacer(modifier = Modifier.height(25.dp))
+        Text(text = "Set Target Hours For Each Category With:")
+        Row() {
+            Button(
+                onClick = { showDialog = true },
+                modifier = Modifier
+                    .padding(8.dp)
+            ) {
+                Text("Custom Input")
+            }
+
+            Button(
+                onClick = { showDialog = true },
+                modifier = Modifier
+                    .padding(8.dp)
+            ) {
+                Text("AI Generated")
+            }
         }
 
         if (showDialog) {
@@ -285,15 +298,14 @@ fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
         val shape = RoundedCornerShape(8.dp)
         Surface(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp),
+                .fillMaxWidth(),
             shape = shape,
-            color = Color.LightGray.copy(alpha = 0.7f)
+            color = Color.White
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(end = 5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Spacer(modifier = Modifier.weight(0.25f))
@@ -311,7 +323,7 @@ fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
             contentPadding = PaddingValues(all = 5.dp)
         ) {
             items(list) { item ->
-                CategoryItemView(maxGoalHours, categoryItem = item, onClick = onItemClick)
+                CategoryItemView(maxGoalHours, categoryItem = item, onClick = { })
             }
         }
     }

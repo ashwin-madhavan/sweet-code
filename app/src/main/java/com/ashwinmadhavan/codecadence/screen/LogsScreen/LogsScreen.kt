@@ -362,11 +362,11 @@ fun LogMakerFloatingActionButton(
                         }
                     )
 
-                    TextField(
-                        value = notes,
-                        onValueChange = { notes = it },
-                        label = { Text("Notes") }
-                    )
+//                    TextField(
+//                        value = notes,
+//                        onValueChange = { notes = it },
+//                        label = { Text("Notes") }
+//                    )
                 }
             },
             confirmButton = {

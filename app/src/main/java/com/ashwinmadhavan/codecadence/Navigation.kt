@@ -1,5 +1,7 @@
 package com.ashwinmadhavan.codecadence
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -86,6 +88,7 @@ fun BottomNavigationItems(navController: NavController) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SetupNavigationHost(
     navController: NavHostController,
