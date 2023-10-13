@@ -48,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ashwinmadhavan.codecadence.BuildConfig
 import com.ashwinmadhavan.codecadence.Constants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -342,7 +343,7 @@ fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
 fun getResponse(question: String) {
     val client = OkHttpClient()
 
-    val apiKey = "My Test Key"
+    val apiKey = BuildConfig.api_key
     val url = "https://api.openai.com/v1/engines/text-davinci-003/completions"
 
     val requestBody = """
