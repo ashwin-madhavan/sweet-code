@@ -51,6 +51,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ashwinmadhavan.codecadence.Constants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.IOException
 
 @Composable
 fun HomeScreen(onItemClick: () -> Unit) {
@@ -74,6 +80,7 @@ fun HomeScreen(onItemClick: () -> Unit) {
                 }
             }
         }
+
 
         Spacer(modifier = Modifier.height(8.dp))
         Text(
@@ -104,7 +111,10 @@ fun HomeScreen(onItemClick: () -> Unit) {
             }
 
             Button(
-                onClick = { showDialog = true },
+                onClick = {
+                    showDialog = true
+                    getResponse("Who is considered the father of rap?")
+                },
                 modifier = Modifier
                     .padding(8.dp)
             ) {
@@ -327,4 +337,46 @@ fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
             }
         }
     }
+}
+
+fun getResponse(question: String) {
+    val client = OkHttpClient()
+
+    val apiKey = "My Test Key"
+    val url = "https://api.openai.com/v1/engines/text-davinci-003/completions"
+
+    val requestBody = """
+            {
+            "prompt": "$question",
+            "max_tokens": 500,
+            "temperature": 0
+            }
+        """.trimIndent()
+
+    val request = Request.Builder()
+        .url(url)
+        .addHeader("Content-Type", "application/json")
+        .addHeader("Authorization", "Bearer $apiKey")
+        .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
+        .build()
+
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            Log.e("error", "API failed", e)
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            val body = response.body?.string()
+            if (body != null) {
+                Log.v("data", body)
+            } else {
+                Log.v("data", "empty")
+            }
+            val jsonObject = JSONObject(body)
+            val jsonArray: JSONArray = jsonObject.getJSONArray("choices")
+            val textResult = jsonArray.getJSONObject(0).getString("text")
+            Log.d("OPEN_AI Results: ", textResult)
+            // callback(textResult)
+        }
+    })
 }
