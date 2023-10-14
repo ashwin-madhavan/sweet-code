@@ -1,7 +1,8 @@
 package com.ashwinmadhavan.codecadence.screen.HomeScreen
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,8 +19,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
@@ -28,8 +31,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -44,6 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,7 +64,10 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.util.concurrent.CompletableFuture
 
+@RequiresApi(Build.VERSION_CODES.N)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(onItemClick: () -> Unit) {
     val viewModel: HomeViewModel =
@@ -114,7 +123,6 @@ fun HomeScreen(onItemClick: () -> Unit) {
             Button(
                 onClick = {
                     showDialog = true
-                    getResponse("Who is considered the father of rap?")
                 },
                 modifier = Modifier
                     .padding(8.dp)
@@ -136,7 +144,45 @@ fun HomeScreen(onItemClick: () -> Unit) {
                     }
                 },
                 text = {
-                    editableCategoryItemList(viewModel = viewModel)
+                    var aiResponse by remember { mutableStateOf("") }
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        editableCategoryItemList(viewModel = viewModel)
+                        var userInput by remember { mutableStateOf("") }
+
+                        TextField(
+                            value = userInput,
+                            onValueChange = { userInput = it },
+                            label = { Text("Enter something") },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                }
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp)
+                        )
+
+                        Text(text = "AI response: $aiResponse")
+
+                        Button(
+                            onClick = {
+                                val responseFuture = getResponse("")
+                                aiResponse = responseFuture.join()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = "Generate AI Suggestion")
+                        }
+
+                    }
                 }
             )
         }
@@ -163,9 +209,7 @@ fun CustomDoubleDisplay(double1: Double, double2: Double) {
             style = MaterialTheme.typography.h6.copy(fontSize = 24.sp)
         )
 
-        Log.d("CustomDD double1 val: ", double1.toString())
         var progress by remember { mutableStateOf(double1 / double2) }
-        Log.d("CustomDD progress val: ", progress.toString())
 
         Column {
             CircularProgressIndicator(
@@ -174,8 +218,6 @@ fun CustomDoubleDisplay(double1: Double, double2: Double) {
                 color = Color.Green
             )
         }
-
-        Log.d("CustomDD", "Checkpoint")
     }
 }
 
@@ -258,8 +300,8 @@ fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
             },
             interactionSource = minusButtonInteractionSource,
             modifier = Modifier
-                .size(48.dp)
-                .background(Color.Gray, CircleShape)
+                .size(20.dp)
+                .background(Color.Gray)
         ) {
             Icon(
                 imageVector = Icons.Default.Close,
@@ -283,8 +325,8 @@ fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
             },
             interactionSource = plusButtonInteractionSource,
             modifier = Modifier
-                .size(48.dp)
-                .background(Color.Gray, CircleShape)
+                .size(20.dp)
+                .background(Color.Gray)
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -340,17 +382,19 @@ fun categoryItemList(viewModel: HomeViewModel, onItemClick: () -> Unit) {
     }
 }
 
-fun getResponse(question: String) {
+@RequiresApi(Build.VERSION_CODES.N)
+fun getResponse(context: String): CompletableFuture<String> {
+    val completableFuture = CompletableFuture<String>()
+
     val client = OkHttpClient()
 
     val apiKey = BuildConfig.api_key
     val url = "https://api.openai.com/v1/engines/text-davinci-003/completions"
-
     val requestBody = """
             {
-            "prompt": "$question",
-            "max_tokens": 500,
-            "temperature": 0
+            "prompt": "I have to study for a CS interview. Can you give me on how many hours I should study for the following categories: Arrays, Linked List, Stack, Queue, Binary Tree, Hashing, and Graph.  Give the answer comma separated in the following format: a, b, c, d, e, f, g. Then followed by an explanation of why those numbers were chosen.",
+            "max_tokens": 800,
+            "temperature": 0.7
             }
         """.trimIndent()
 
@@ -363,21 +407,25 @@ fun getResponse(question: String) {
 
     client.newCall(request).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
-            Log.e("error", "API failed", e)
+            completableFuture.completeExceptionally(e)
         }
 
         override fun onResponse(call: Call, response: Response) {
-            val body = response.body?.string()
-            if (body != null) {
-                Log.v("data", body)
-            } else {
-                Log.v("data", "empty")
+            try {
+                val body = response.body?.string()
+                if (body != null) {
+                    val jsonObject = JSONObject(body)
+                    val jsonArray: JSONArray = jsonObject.getJSONArray("choices")
+                    val textResult = jsonArray.getJSONObject(0).getString("text")
+                    completableFuture.complete(textResult)
+                } else {
+                    completableFuture.complete("Empty response")
+                }
+            } catch (e: Exception) {
+                completableFuture.completeExceptionally(e)
             }
-            val jsonObject = JSONObject(body)
-            val jsonArray: JSONArray = jsonObject.getJSONArray("choices")
-            val textResult = jsonArray.getJSONObject(0).getString("text")
-            Log.d("OPEN_AI Results: ", textResult)
-            // callback(textResult)
         }
     })
+
+    return completableFuture
 }
