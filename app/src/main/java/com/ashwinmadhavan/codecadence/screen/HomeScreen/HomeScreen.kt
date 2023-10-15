@@ -29,12 +29,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -313,12 +309,13 @@ fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
             interactionSource = minusButtonInteractionSource,
             modifier = Modifier
                 .size(20.dp)
-                .background(Color.Gray)
+                .background(Color.Red)
         ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = "Decrement",
-                tint = Color.White
+            Text(
+                text = "-",
+                fontSize = 15.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
             )
         }
 
@@ -338,12 +335,13 @@ fun CategoryItemRow(categoryItem: CategoryItem, viewModel: HomeViewModel) {
             interactionSource = plusButtonInteractionSource,
             modifier = Modifier
                 .size(20.dp)
-                .background(Color.Gray)
+                .background(Color.Green)
         ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Increment",
-                tint = Color.White
+            Text(
+                text = "+",
+                fontSize = 15.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
             )
         }
     }
