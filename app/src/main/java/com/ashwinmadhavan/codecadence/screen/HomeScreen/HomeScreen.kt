@@ -114,24 +114,13 @@ fun HomeScreen(onItemClick: () -> Unit) {
 
 
         Spacer(modifier = Modifier.height(25.dp))
-        Text(text = "Set Target Hours For Each Category With:")
         Row() {
             Button(
                 onClick = { showDialog = true },
                 modifier = Modifier
                     .padding(8.dp)
             ) {
-                Text("Custom Input")
-            }
-
-            Button(
-                onClick = {
-                    showDialog = true
-                },
-                modifier = Modifier
-                    .padding(8.dp)
-            ) {
-                Text("AI Generated")
+                Text("Adjust Target Hours")
             }
         }
 
