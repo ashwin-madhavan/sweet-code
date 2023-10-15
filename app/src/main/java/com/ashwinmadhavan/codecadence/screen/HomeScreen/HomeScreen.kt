@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,9 +21,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
@@ -157,7 +161,7 @@ fun HomeScreen(onItemClick: () -> Unit) {
                         TextField(
                             value = userInput,
                             onValueChange = { userInput = it },
-                            label = { Text("Enter something") },
+                            placeholder = { Text("Enter you goals, timeline, etc here to generate a plan!") },
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 imeAction = ImeAction.Done
                             ),
@@ -167,27 +171,46 @@ fun HomeScreen(onItemClick: () -> Unit) {
                             ),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 16.dp)
+                                .height(200.dp)
+                                .padding(bottom = 5.dp)
                         )
-
-                        Text(text = "AI response: $aiResponse")
-
                         Button(
                             onClick = {
-                                val responseFuture = getResponse("")
+                                val responseFuture = getResponse(userInput)
                                 aiResponse = responseFuture.join()
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(text = "Generate AI Suggestion")
                         }
-
+                        ScrollableText(text = "AI response: $aiResponse")
                     }
                 }
             )
         }
     }
 }
+
+
+@Composable
+fun ScrollableText(text: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .padding(2.dp)
+            .border(1.dp, Color.Black)
+    ) {
+        Box(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
+        ) {
+            Text(text = text)
+        }
+    }
+}
+
 
 @Composable
 fun CustomDoubleDisplay(double1: Double, double2: Double) {
@@ -392,7 +415,7 @@ fun getResponse(context: String): CompletableFuture<String> {
     val url = "https://api.openai.com/v1/engines/text-davinci-003/completions"
     val requestBody = """
             {
-            "prompt": "I have to study for a CS interview. Can you give me on how many hours I should study for the following categories: Arrays, Linked List, Stack, Queue, Binary Tree, Hashing, and Graph.  Give the answer comma separated in the following format: a, b, c, d, e, f, g. Then followed by an explanation of why those numbers were chosen.",
+            "prompt": "I have to study for a CS interview. $context Can you give me on how many hours I should study for the following categories:\nArrays, Linked List, Stack, Queue, Binary Tree, Hashing, and Graph.\n\nGive the answer comma separated in the following format:\nArray: a\nLinkedList: b\nStack: c\nQueue: d\nBinary Tree: e\nHashing: f\nGraph: g\n\nThen followed by a three sentence explanation of why those numbers were chosen.",
             "max_tokens": 800,
             "temperature": 0.7
             }
