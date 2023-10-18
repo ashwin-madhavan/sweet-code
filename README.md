@@ -15,10 +15,10 @@ Overall, Compose ChatGPT Kotlin is a powerful and flexible chatbot solution that
 ## Screenshots
 
 <p>
-<img src="https://github.com/ashwin-madhavan/sweet-code/blob/main/screenshots/Home%20Page.png?raw=true" height="600px"/>
-<img src="https://github.com/ashwin-madhavan/sweet-code/blob/main/screenshots/Adjust%20Goal%20Hours%20Dialog.png?raw=true" height="600px"/>  
-<img src="https://github.com/ashwin-madhavan/sweet-code/blob/main/screenshots/Log%20Entry%20Page.jpg?raw=true" height="600px"/>
-<img src="https://github.com/ashwin-madhavan/sweet-code/blob/main/screenshots/Add%20Log%20Entry%20Dialog.png?raw=true" height="600px"/>
+<img src="https://github.com/ashwin-madhavan/sweet-code/blob/main/screenshots/Home%20Page.png?raw=true" height="300px"/>
+<img src="https://github.com/ashwin-madhavan/sweet-code/blob/main/screenshots/Adjust%20Goal%20Hours%20Dialog.png?raw=true" height="300px"/>  
+<img src="https://github.com/ashwin-madhavan/sweet-code/blob/main/screenshots/Log%20Entry%20Page.jpg?raw=true" height="300px"/>
+<img src="https://github.com/ashwin-madhavan/sweet-code/blob/main/screenshots/Add%20Log%20Entry%20Dialog.png?raw=true" height="300px"/>
 </p>
 
 
