@@ -2,14 +2,16 @@
 > _This README is written with the help of ChatGPT_
 
 <p align="justify">
-<img src="https://res.cloudinary.com/apideck/image/upload/v1672442492/marketplaces/ckhg56iu1mkpc0b66vj7fsj3o/listings/-4-ans_frontend_assets.images.poe.app_icon.png-26-8aa0a2e5f237894d_tbragv.png?raw=true" width="190px" height=auto align="right" alt="Computador"/>
-Compose ChatGPT Kotlin is an open-source Android chatbot application built using Jetpack Compose and Kotlin programming language. It integrates with OpenAI's GPT-3, GPT-4 API to generate human-like responses to user messages. The app is designed to be easy to use and highly customizable, allowing users to easily integrate the chatbot functionality into their existing projects.
+<img src="https://github.com/ashwin-madhavan/sweet-code/blob/main/screenshots/Sugar%20-%20App%20Icon.png?raw=true" width="190px" height=auto align="right" alt="Computador"/>
 
-This project showcases the use of modern Android development tools and techniques, including Jetpack Compose for building responsive UIs, Kotlin Coroutines for asynchronous programming, and Dagger Hilt for dependency injection. It also demonstrates how to use the OpenAI GPT-3, GPT-4 API to create a powerful and intelligent chatbot.<br/>
+When preparing for a CS interview, it's important to set aside focused time to really understand the different topics that might come up. This app helps you do just that! You can establish hourly goals for each interview topic, log each timed study session, and track your progress towards achieving those goals.
 
-The project has a well-organized folder structure that makes it easy to navigate and understand the codebase. The code is well-documented and follows best practices for clean and maintainable code.<br/>
+Key Features of this Android App:
+o Goal Setting/Gamification: Allows users to define specific target study hour goals for each interview question category.
 
-Overall, Compose ChatGPT Kotlin is a powerful and flexible chatbot solution that can be easily integrated into any Android project. With its modern architecture and powerful features, it is an excellent example of how to build high-quality Android applications using the latest tools and techniques.
+o AI-Powered Goal Setting: Utilizes OpenAI's API to recommend optimal time allocation for interview preparation based on contextual input.
+  
+Overall, SweetCode is an open-source Android application built using Jetpack Compose and Kotlin programming language. The app is designed to be easy to use and gamified, allowing users to stay engaged and track their progress on their journey to be interview ready.
 </p>
 
 ## Screenshots
@@ -31,8 +33,8 @@ Overall, Compose ChatGPT Kotlin is a powerful and flexible chatbot solution that
 
 1. Clone the repository.
 2. Obtain an OpenAI API Key from the OpenAI website.
-4. In the ***app/src/main/java/com/chatgptlite/wanted/constants/Constants.kt*** file, add the following line and replace <your-api-key> with your actual API key:
-openAIApiKey=<your-api-key>
+4. In the root folder local.properties file, add the following line and replace <your-api-key> with your actual API key:
+api_key=<your-api-key>
 5. Build and run the app on an emulator or physical device.
 
 ## Directory Structure
@@ -45,15 +47,14 @@ openAIApiKey=<your-api-key>
 │   ├── src
 │   │   ├── androidTest
 │   │   ├── main
-│   │   │   ├── java/com/chatgptlite/wanted
-│   │   │   │   ├── constants
+│   │   │   ├── java/com/ashwinmadhavan/codecadence
 │   │   │   │   ├── data
-│   │   │   │   ├── di
-│   │   │   │   ├── helpers
-│   │   │   │   ├── models
+│   │   │   │   ├── screen
 │   │   │   │   ├── ui
+│   │   │   │   ├── constants
+
 │   │   │   │   └── MainActivity.kt
-│   │   │   │   └── MainViewModel.kt
+│   │   │   │   └── Navigation.kt
 │   │   │   ├── res
 │   │   │   └── AndroidManifest.xml
 │   │   ├── test
@@ -69,40 +70,27 @@ openAIApiKey=<your-api-key>
 └── settings.gradle
 ```
 
-The ***app*** directory contains all the source code and resources of the application. It contains a build.gradle file, which is used to configure the build process for the application, and a proguard-rules.pro file, which contains rules for ProGuard, a tool used to shrink and obfuscate code.
-
-Within the ***src*** directory, there are two subdirectories: androidTest and main. The androidTest directory contains integration tests for the application on Android. The main directory contains the majority of the source code and resources for the application, and is further broken down into subdirectories:
-
 - `constants`: This directory contains constant values used throughout the application.
 - `data`: This directory contains the data layer of the application, including repositories and data sources.
 - `di`: This directory contains the Dependency Injection setup for the application.
-- `helpers`: This directory contains utility classes used throughout the application.
+- `screen`: This directory contains ui screen components and viewmodels
 - `models`: This directory contains the data models used throughout the application.
-- `ui`: This directory contains the user interface components of the application, including Activities, Fragments, and Composables.
+- `ui`: This directory contains UI files (Color.kt, Theme.kt, Type.kt)
 - `MainActivity.kt`: This file contains the implementation of the main activity for the application.
-- `MainViewModel.kt`: This file contains the implementation of the main view model for the application.
-
-The project also contains other files and directories at the root level, including the build.gradle file, which is used to configure the build process for the entire project, the gradle directory, which contains files related to the Gradle build system, and the gradlew and gradlew.bat scripts, which are used to run Gradle commands. The gradle.properties file contains properties used by the Gradle build system, and the settings.gradle file is used to configure the Gradle settings for the project.
+- `Naviation.kt`: This file contains the implementation of the navigation between Activities.
 
 ## Features
 
-- [x] New Chat
-- [x] Chat History
-- [x] ChatBot with ChatGPT
-  - [x] stream: true
-    - [x] gpt-3.5-turbo
-    - [x] gpt-4 
-    - [x] text-davinci-003, text-curie-001, text-babbage-001, text-ada-001
-  - [ ] stream: false
-    - [ ] gpt-3.5-turbo
-    - [ ] text-davinci-003, text-curie-001, text-babbage-001, text-ada-001
-- [x] Stop generating
-- [x] Delete conversation
-- [ ] Settings for ChatGPT
-- [ ] Light/Dart Themes
+- [x] View progress bar for each topic
+- [x] Edit/set progress bar goal for each topic
+- [x] Generate goal suggestions with ChatGPT
+  - [x] text-davinci-00303, text-curie-001, text-babbage-001, text-ada-001
+- [x] Enter logs of hours spent study by topic
+- [x] View logs entries by latest submission to earliest
 
 ## Acknowledgments
 - Jetpack Compose
+- OkHttp Client
 - Retrofit
+- Room
 - [OpenAI GPT-3 API](https://beta.openai.com/docs/api-reference/introduction)
-- [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
