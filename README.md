@@ -93,7 +93,7 @@ api_key=<your-api-key>
 - [x] Enter logs of hours spent study by topic
 - [x] View logs entries by latest submission to earliest
 - [ ] Clean up UI
-- [ ] Finish adding UI and integration tests
+- [ ] Finish adding unit and integration tests
 
 ## Acknowledgments
 - Jetpack Compose
