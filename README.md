@@ -7,9 +7,9 @@
 When preparing for a CS interview, it's important to set aside focused time to really understand the different topics that might come up. This app helps you do just that! You can establish hourly goals for each interview topic, log each timed study session, and track your progress towards achieving those goals.
 
 Key Features of this Android App:
-o Goal Setting/Gamification: Allows users to define specific target study hour goals for each interview question category.
-
-o AI-Powered Goal Setting: Utilizes OpenAI's API to recommend optimal time allocation for interview preparation based on contextual input.
+  o Goal Setting/Gamification: Allows users to define specific target study hour goals for each interview question category.
+  
+  o AI-Powered Goal Setting: Utilizes OpenAI's API to recommend optimal time allocation for interview preparation based on contextual input.
   
 Overall, SweetCode is an open-source Android application built using Jetpack Compose and Kotlin programming language. The app is designed to be easy to use and gamified, allowing users to stay engaged and track their progress on their journey to be interview ready.
 </p>
@@ -77,7 +77,7 @@ api_key=<your-api-key>
 - `models`: This directory contains the data models used throughout the application.
 - `ui`: This directory contains UI files (Color.kt, Theme.kt, Type.kt)
 - `MainActivity.kt`: This file contains the implementation of the main activity for the application.
-- `Naviation.kt`: This file contains the implementation of the navigation between Activities.
+- `Navigation.kt`: This file contains the implementation of the navigation between Activities.
 
 ## Features
 
@@ -87,6 +87,8 @@ api_key=<your-api-key>
   - [x] text-davinci-00303, text-curie-001, text-babbage-001, text-ada-001
 - [x] Enter logs of hours spent study by topic
 - [x] View logs entries by latest submission to earliest
+- [ ] Clean up UI
+- [ ] Finish adding UI and integration tests
 
 ## Acknowledgments
 - Jetpack Compose
