@@ -6,10 +6,15 @@
 
 When preparing for a CS interview, it's important to set aside focused time to really understand the different topics that might come up. This app helps you do just that! You can establish hourly goals for each interview topic, log each timed study session, and track your progress towards achieving those goals.
 
-Key Features of this Android App:
-  o Goal Setting/Gamification: Allows users to define specific target study hour goals for each interview question category.
-  
-  o AI-Powered Goal Setting: Utilizes OpenAI's API to recommend optimal time allocation for interview preparation based on contextual input.
+<strong>Key Features of this Android App:</strong>
+  <ul>
+    <li>
+      Goal Setting/Gamification: Allows users to define specific target study hour goals for each interview question category.
+    </li>
+    <li>
+      AI-Powered Goal Setting: Utilizes OpenAI's API to recommend optimal time allocation for interview preparation based on contextual input.
+    </li>
+  </ul>
   
 Overall, SweetCode is an open-source Android application built using Jetpack Compose and Kotlin programming language. The app is designed to be easy to use and gamified, allowing users to stay engaged and track their progress on their journey to be interview ready.
 </p>
